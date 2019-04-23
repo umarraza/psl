@@ -85,13 +85,13 @@ class PlayersController extends Controller
      // Show all Players
     public function show($id)
     {
-        $players = Player::where('matchId', '=', $id)->get();
-        $matchId = NULL;
-        foreach($players as $player){
-            $id  =  $player->matchId;
-        }
+        $players = Player::where('seriesId', '=', $id)->get();
+        // $matchId = NULL;
+        // foreach($players as $player){
+        //     $id  =  $player->matchId;
+        // }
         if(!empty($players)){
-            return view("players.viewPlayers",compact('players', 'id'));
+            return view("players.viewPlayers",compact('players','id'));
         }
     }
  
