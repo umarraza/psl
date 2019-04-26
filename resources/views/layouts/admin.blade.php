@@ -20,6 +20,7 @@
   <link rel="stylesheet" href="{{asset('./Admin/dist/css/./AdminLTE.min.css')}}">
   <link rel="stylesheet" href="{{asset('./Admin/dist/css/skins/skin-blue.min.css')}}">
   <link rel="stylesheet"href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+  {{-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"> --}}
 </head>
 <!--
 BODY TAG OPTIONS:
@@ -41,7 +42,7 @@ desired effect
 |               | sidebar-mini                            |
 |---------------------------------------------------------|
 -->
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition skin-blue sidebar-mini" style="background-color: #fff">
     <div class="wrapper">
 
   <!-- Main Header -->
@@ -105,7 +106,7 @@ desired effect
             <li><a href="{{ url('home') }}"><i class="fa fa-user"></i> <span>Home</span></a></li>                 
             <li><a href="{{ url('create-series') }}"><i class="fa fa-user"></i> <span>Create Series</span></a></li>                 
             <li><a href="{{ url('view-all-series') }}"><i class="fa fa-users"></i> <span>Show Series</span></a></li>
-            <!-- <li><a href="{{url('create-player-form')}}"><i class="fa fa-money"></i> <span>Create Player</span></a></li> -->
+             <li><a href="{{url('show-rules')}}"><i class="fa fa-money"></i> <span>Show Rules</span></a></li> 
             <!-- <li><a href="{{url('show-products')}}"><i class="fa fa-product-hunt"></i> <span>Products</span></a></li> -->
              <!-- <li><a href="{{url('new-sales-form')}}"><i class="fa fa-male"></i> <span>Sale</span></a></li> -->
            <!--  <li><a href="{{url('new-purchase-form')}}"><i class="fa fa-male"></i> <span>Purchase</span></a></li>

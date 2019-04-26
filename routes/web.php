@@ -11,9 +11,12 @@ use App\User;
 |
 */
 use App\SeriesMatches;
+use App\Models\Api\ApiRules as Rules;
+
 use App\Series;  
 
     Auth::routes();
+
     Route::get('/login', function () {
         return view('auth.login');
     });
@@ -24,6 +27,10 @@ use App\Series;
     Route::get('/create-series', function () {
         return view('series.createSeries');
     });
+    Route::get('/show-rules', function () {
+        $rules = Rules::all();
+        return view('rules', compact('rules'));
+    });
     Route::get('/create-player-form/{id}', function ($id) {
         $match = SeriesMatches::where('id', '=', $id)->first();
         $seriesId = $match->seriesId;
@@ -32,6 +39,7 @@ use App\Series;
             return view('players.createPlayers', compact('seriesId', 'id'));
         }
     });
+
 
     Route::group(['middleware' => ['web']], function () {
         
@@ -53,7 +61,6 @@ use App\Series;
     
     
     
-    
                 /* ====== Players Routes ====== */
     Route::post('/new-player','Api\PlayersController@store');                                          			
     Route::get('/view-all-players/{id}','Api\PlayersController@show');
@@ -61,6 +68,10 @@ use App\Series;
     Route::post('/update-player','Api\PlayersController@update');	
     Route::get('/update-player-form/{id}','Api\PlayersController@player');	
     });
+
+
+    Route::post('/update-rule/{id}','Api\RulesController@updateRule');	
+    Route::get('/update-rule-form/{id}','Api\RulesController@ruleData');	
 
 
 

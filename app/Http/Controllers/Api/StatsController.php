@@ -25,7 +25,8 @@ class StatsController extends Controller
 {
     public function updateStats(Request $request)
     {
-    	$user = JWTAuth::toUser($request->token);
+        $user = JWTAuth::toUser($request->token);
+        
         $response = [
                 'data' => [
                     'code'      => 400,
@@ -47,7 +48,7 @@ class StatsController extends Controller
             $teamMembers = TeamMember::where('points', '!=', 0)->update(['points'=>0]);
             
             
-            $api_url  = "http://cricapi.com/api/fantasySummary?apikey=bFm326931rSZTuCWDDlUWHdxDHn2&unique_id=1152566";
+            $api_url  = "http://cricapi.com/api/fantasySummary?apikey=bFm326931rSZTuCWDDlUWHdxDHn2&unique_id=1157245";
             //  $api_url  = "http://cricapi.com/api/fantasySummary?apikey=<apikey>&unique_id=<unique_id>"
 
             //  Initiate curl

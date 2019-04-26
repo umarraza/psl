@@ -3,9 +3,10 @@
 namespace App\Models\Api;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\TeamMember;
+use App\Models\Rules;
 
-class ApiTeamMember extends TeamMember
+
+class ApiRules extends Rules
 {
     //
 }

@@ -19,6 +19,8 @@ use App\Models\Api\ApiUser as User;
 use App\Models\Api\ApiPlayer as Player;
 use App\Models\Api\ApiMatch as Match;
 use App\Models\Api\ApiAppCommand as AppCommand;
+use App\Models\Api\ApiSeries as Series;
+
 use Carbon\Carbon;
 class PlayerController extends Controller
 {
@@ -317,13 +319,22 @@ class PlayerController extends Controller
                'status' => false
             ];
             
-            $players = Player::all();
-            foreach ($players as $player) {
-                $player['image'] = "http://fantasycricleague.online/PSL/storage/app/public/".$player['image'];
+            $allSeries = Series::all();
+
+            foreach ($allSeries as $series){
+                if($series->status == 1){
+                    $seriesId = $series->id;
+                    $seriesPlayers = Player::where('seriesId', '=', $seriesId)->get();
+                }
             }
+
+            // $players = Player::all();
+            // foreach ($players as $player) {
+            //     $player['image'] = "http://fantasycricleague.online/PSL/storage/app/public/".$player['image'];
+            // }
             $response['data']['code']       = 200;
             $response['data']['message']    = 'Request Successfull';
-            $response['data']['result']     = $players;
+            $response['data']['result']     = $seriesPlayers;
             $response['status']             = true;    
         }
         return $response;

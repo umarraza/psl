@@ -131,7 +131,6 @@ Route::group(['middleware' => 'jwt.auth'], function () {
     Route::get('top-ten-info','Api\TeamOwnerController@listTopTen');
     
     
-    
     // Get Match Wise Stats
     Route::post('match-wise-stats','Api\RecordsController@listTeamMembers');
     
@@ -139,6 +138,18 @@ Route::group(['middleware' => 'jwt.auth'], function () {
     Route::post('match-wise-stats-test','Api\RecordsController@updateRecords');
     
     
+    //=========================== Rules Routes =========================//
+
+    Route::post('create-rule','Api\RulesController@create');
+    Route::get('show-rules','Api\RulesController@show');
+    Route::post('get-rule','Api\RulesController@read');
+    Route::post('update-rule','Api\RulesController@update');
+    Route::post('delete-rule','Api\RulesController@delete');
+
+
+
+
+
     
 });
 Route::get('abc-test','Api\StatsController@abcTest');
