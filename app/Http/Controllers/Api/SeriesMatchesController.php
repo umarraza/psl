@@ -38,7 +38,7 @@ class SeriesMatchesController extends Controller
         Status = 0: No match is currently being playing between pakistan and 
         opponent team. In order to create new match, first check if there is a match with active 
         status = 1 in database. If there is any match avaialble with active status = 1, 
-        update it to 0.
+        update it to 0 pakistani team can play one match at a time.
         
         */  
 
@@ -115,8 +115,8 @@ class SeriesMatchesController extends Controller
                 ->update(['series_matches.status'=> 0]);
 
                 $match   =  SeriesMatches::find($request->id);
-                $match->teamA         =  $request->teamA;
 
+                $match->teamA         =  $request->teamA;
                 $match->teamB         =  $request->teamB;
                 $match->dateTimeGMT   =  $request->dateTimeGMT;
                 $match->startingTime  =  $request->startingTime;
@@ -169,9 +169,9 @@ class SeriesMatchesController extends Controller
     // Delete match from a series
 
     public function delete($id){
-        $match = SeriesMatches::find($id);
-        $players = Player::where('matchId', '=', $id)->get();
-        $seriesId = $match->seriesId;
+        $match     =  SeriesMatches::find($id);
+        $players   =  Player::where('matchId', '=', $id)->get();
+        $seriesId  =  $match->seriesId;
         
         if(!empty($match && $players && $seriesId)){
            if( $players->each->delete()){

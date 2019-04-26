@@ -2,10 +2,10 @@
 
 namespace App\Models\Api;
 
+use App\Models\Series;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\TeamMember;
 
-class ApiTeamMember extends TeamMember
+class ApiSeries extends Series
 {
     //
 }

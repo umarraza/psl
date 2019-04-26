@@ -18,6 +18,9 @@ use JWTAuth;
 //// Models ////
 use App\Models\Api\ApiUser as User;
 use App\Models\Api\ApiMatch as Match;
+use App\Models\Api\ApiSeries as Series;
+use App\Models\Api\ApiSeriesMatches as SeriesMatches;
+
 
 class MatchController extends Controller
 {
@@ -202,11 +205,39 @@ class MatchController extends Controller
             ];
         if(!empty($user) )
         {
-            $matches = Match::all();
 
-            foreach ($matches as $match) 
-            {
-                $myTime = $match->dateTimeGMT;
+            $allSeries = Series::all();
+
+            foreach ($allSeries as $series){
+
+                if ($series->status == 1){
+
+                    $seriesId   =  $series->id;
+                    $seriesMatches =  SeriesMatches::where('seriesId', '=', $seriesId)->get();
+
+                    if (!empty($allMatches)){
+
+                        $response['data']['code']       = 200;
+                        $response['status']             = true;
+                        $response['data']['result']    	= $seriesMatches;
+                        $response['data']['message']    = 'Request Successfull';
+
+                    } else {
+
+                        $response['data']['code']       = 400;
+                        $response['status']             = flase;
+                        $response['data']['message']    = 'No Matches Found!';
+                    }
+                }
+            }
+
+
+            // $matches = Match::all();
+
+            // foreach ($matches as $match) 
+            // {
+            //     $myTime = $match->dateTimeGMT;
+
                 // $TAR =  explode(" ",$match->teamA);
                 // $TA = substr($TAR[0], 0, 1).substr($TAR[1], 0, 1);
 
@@ -214,20 +245,16 @@ class MatchController extends Controller
                 // $TB = $TBR[0];
                 // $TB = substr($TBR[0], 0, 1).substr($TBR[1], 0, 1);
                 
+
+
                 
 
-                $match['dateTimePKT'] = date('Y-m-d g:i A',strtotime($myTime."+5 Hours"));
+                // $match['dateTimePKT'] = date('Y-m-d g:i A',strtotime($myTime."+5 Hours"));
                 // $match['dropdownMatchs'] = $TA." VS ".$TB." (".date('M-d g:i A',strtotime($myTime."+5 Hours")).")";
-                $match['dropdownMatchs'] = "PAK VS AUS". " (".date('M-d g:i A',strtotime($myTime."+5 Hours")).")";
+                // $match['dropdownMatchs'] = "PAK VS AUS". " (".date('M-d g:i A',strtotime($myTime."+5 Hours")).")";
                 
-            }
-
-            $response['data']['code']       = 200;
-            $response['status']             = true;
-            $response['data']['result']    	= $matches;
-            $response['data']['message']    = 'Match deleted Successfully';
+            // }
         }
-        
         return $response;
     }
 }

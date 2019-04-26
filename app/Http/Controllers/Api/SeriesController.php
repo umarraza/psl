@@ -120,11 +120,13 @@ class SeriesController extends Controller
 
     public function showSeries()
     {
-        $allSeries = Series::all();
-        $allMatches = SeriesMatches::all();
-        if(!empty($allSeries && $allMatches)){
-        $noOfSeries = count($allSeries);
-        $noOfMatches = count($allMatches);
+        $allSeries   =  Series::all();
+        $allMatches  =  SeriesMatches::all();
+
+        if ( !empty($allSeries && $allMatches)) {
+            
+            $noOfSeries   =  count($allSeries);
+            $noOfMatches  =  count($allMatches);
 
             return view('series.viewSeries',compact('allSeries','noOfSeries','noOfMatches'));
         }
@@ -143,6 +145,7 @@ class SeriesController extends Controller
     /* ===================== Delete Series ===================== */
 
     public function delete($id){
+
         $players  =  Player::where('seriesId', '=', $id)->get();
         $matches  =  SeriesMatches::where('seriesId', '=', $id)->get();
         $series   =  Series::find($id);
