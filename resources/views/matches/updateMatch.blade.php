@@ -8,7 +8,7 @@
                 <div class="box box-primary">
                     <div class="box-header with-border">
                         <div class="pull-right">
-                            <a href="{{ url('view-all-matches/'.$match->id) }}" type="button" class="btn btn-danger">Back</a>
+                            <a href="{{ url('view-all-matches/'.$match->seriesId) }}" type="button" class="btn btn-danger">Back</a>
                         </div>
                     <h3 class="box-title">Create New Match</h3>
                 </div>

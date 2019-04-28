@@ -12,11 +12,8 @@ use DB;
 class SeriesController extends Controller
 {
 
-    /* ============ Create New Series ============ */
-    
-    public function newSeries(Request $request)
+    public function create(Request $request)  // Create New Series
     {
-
         $rules = [
             'seriesName'  =>  'required|unique:cric-series',
             'status'      =>  'required',
@@ -37,13 +34,17 @@ class SeriesController extends Controller
             update it to 0.
             
             */  
-
+            $status = NULL;
+            if ($request->status == 1) {
+                $status = $request->status;
+                $status = 'Active';
+            }
             if($request->status == 1){
-                DB::table('cric-series')->where('cric-series.status', '=', 1)
-                                        ->update(['cric-series.status'=> 0]);
+                DB::table('cric-series')->where('cric-series.status', '=', 'Active')
+                                        ->update(['cric-series.status'=> 'Un-Active']);
                 $series = Series::create([
                     'seriesName'   =>  $request->seriesName,
-                    'status'       =>  $request->status,
+                    'status'       =>  $status,
                     'type'         =>  $request->type,
                 ]);
                     if($series->save()){
@@ -52,11 +53,17 @@ class SeriesController extends Controller
                         return "Request Unsuccessfull";
                     }   
             }else{            
-                // Create series if status is 0. 
+
+                // Create series if status is 0 or series is currently not active. 
+                $status = NULL;
+                if ($request->status == 0) {
+                    $status = $request->status;
+                    $status = 'Un-Active';
+                }
                 $series = Series::create([
 
                     'seriesName'   =>  $request->seriesName,
-                    'status'       =>  $request->status,
+                    'status'       =>  $status,
                     'type'         =>  $request->type,
 
             ]);
@@ -69,7 +76,7 @@ class SeriesController extends Controller
         }
     }
 
-    
+
     /* ============ Update Series ============ */
 
     public function update(Request $request)
@@ -86,12 +93,20 @@ class SeriesController extends Controller
         // }else{
             if($request->status == 1){
                 
-                DB::table('cric-series')->where('cric-series.status', '=', 1)
-                ->update(['cric-series.status'=> 0]);
+                DB::table('cric-series')->where('cric-series.status', '=', 'Active')
+                ->update(['cric-series.status'=> 'Un-Active']);
+
+                $status = NULL;
+                if ($request->status == 1) {
+                    
+                    $status = $request->status;
+                    $status = 'Active';
+                
+                }
 
                 $series              =  Series::find($request->id);
                 $series->seriesName  =  $request->seriesName;
-                $series->status      =  $request->status;
+                $series->status      =  $status;
                 $series->type        =  $request->type;
 
                 if($series->save()){
@@ -101,9 +116,17 @@ class SeriesController extends Controller
                 }
             }else{
 
+                $status = NULL;
+                if ($request->status == 0) {
+
+                    $status = $request->status;
+                    $status = 'Un-Active';
+
+                }
+
                 $series              =  Series::find($request->id);
                 $series->seriesName  =  $request->seriesName;
-                $series->status      =  $request->status;
+                $series->status      =  $status;
                 $series->type        =  $request->type;
 
                 if($series->save()){
@@ -118,7 +141,7 @@ class SeriesController extends Controller
     
     /* ============ Show all the Active/Inactive series ============ */
 
-    public function showSeries()
+    public function show()
     {
         $allSeries   =  Series::all();
         $allMatches  =  SeriesMatches::all();
@@ -137,6 +160,11 @@ class SeriesController extends Controller
     public function series($id)
     {
         $series = Series::find($id);
+        if ($series->status == 'Active') {
+            $series->status = 1;
+        }else{
+            $series->status = 0;
+        }
         if(!empty($series)){
             return view('series.updateSeries',compact('series'));
         }

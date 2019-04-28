@@ -5,7 +5,7 @@
     <div class="box-header with-border">
         <h1 class="box-title">Edit Series</h1>
         <div class="pull-right">
-            <a href="{{ url('view-all-players') }}" type="button" class="btn btn-danger">Back</a>
+            <a href="{{ url('view-all-players/'.$player->seriesId) }}" type="button" class="btn btn-danger">Back</a>
         </div>
     </div> 
 

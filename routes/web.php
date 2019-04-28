@@ -31,11 +31,12 @@ use App\Series;
         $rules = Rules::all();
         return view('rules', compact('rules'));
     });
-    Route::get('/create-player-form/{id}', function ($id) {
-        $match = SeriesMatches::where('id', '=', $id)->first();
-        $seriesId = $match->seriesId;
 
-        if(!empty($match && $seriesId)){
+    Route::get('/create-player-form/{id}', function ($id) {
+        $series = Series::where('id', '=', $id)->first();
+        $seriesId = $series->id;
+
+        if(!empty($series && $seriesId)){
             return view('players.createPlayers', compact('seriesId', 'id'));
         }
     });
@@ -44,19 +45,19 @@ use App\Series;
     Route::group(['middleware' => ['web']], function () {
         
                     /* ====== Series Routes ====== */
-    Route::get('/view-all-series','Api\SeriesController@showSeries');
-    Route::post('/new-series','Api\SeriesController@newSeries');				
-    Route::get('/delete-series/{id}','Api\SeriesController@delete');	        
-    Route::get('/update-series-form/{id}','Api\SeriesController@series'); 	
+    Route::post('/new-series','Api\SeriesController@create');				
+    Route::get('/view-all-series','Api\SeriesController@show');
     Route::post('/update-series','Api\SeriesController@update');	
+    Route::get('/delete-series/{id}','Api\SeriesController@delete');
+    Route::get('/update-series-form/{id}','Api\SeriesController@series'); 	
    
    
    
                  /* ====== Match Routes ====== */
-    Route::post('/new-match','Api\SeriesMatchesController@newMatch');				
+    Route::post('/new-match','Api\SeriesMatchesController@create');				
     Route::get('/view-all-matches/{id}','Api\SeriesMatchesController@show');
     Route::get('/delete-match/{id}','Api\SeriesMatchesController@delete');				
-    Route::get('/update-match-form/{id}','Api\SeriesMatchesController@matchData');	
+    Route::get('/update-match-form/{id}','Api\SeriesMatchesController@match');	
     Route::post('/update-match','Api\SeriesMatchesController@update');	
     
     

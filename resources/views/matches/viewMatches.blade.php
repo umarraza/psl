@@ -44,7 +44,7 @@
 
                             <td>
                                 <a href="{{url('/update-match-form/'.$match->id)}}" type="button" class="btn btn-warning">Edit</a>
-                                <a href="{{url('/view-all-players/'.$match->id)}}" type="button" class="btn btn-info">View Players</a>
+                                <!-- <a href="{{url('/view-all-players/'.$match->id)}}" type="button" class="btn btn-info">View Players</a> -->
                                 <a href="{{url('/delete-match/'.$match->id)}}" type="button" class="btn btn-danger">Delete</a>
 
                             </td>

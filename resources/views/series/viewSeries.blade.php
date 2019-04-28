@@ -20,7 +20,7 @@
                 <tr>
                     <th>Sr#</th>
                     <th>Series Name:</th>
-                    <th>Active/Inactive</th>
+                    <th>Active/Unactive</th>
                     <th>Series Type:</th>
                     <th>Actions</th>
                 </tr>

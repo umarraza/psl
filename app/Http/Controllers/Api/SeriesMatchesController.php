@@ -13,10 +13,11 @@ use Validator;
 class SeriesMatchesController extends Controller
 {
 
-    public function newMatch(Request $request)
+    public function create(Request $request)
     {
 
         $rules = [
+
             'teamA'        =>  'required',
             'teamB'        =>  'required',
             'dateTimeGMT'  =>  'required',
@@ -41,11 +42,17 @@ class SeriesMatchesController extends Controller
         update it to 0 pakistani team can play one match at a time.
         
         */  
+            $status = NULL;
+            if ($request->status == 1) {
+                $status = $request->status;
+                $status = 'Active';
+            }
 
             if($request->status == 1){
                     
-                    DB::table('series_matches')->where('series_matches.status', '=', 1)
-                    ->update(['series_matches.status'=> 0]);
+                    DB::table('series_matches')->where('series_matches.status', '=', 'Active')
+                    ->update(['series_matches.status'=> 'Un-Active']);
+
 
                 $match = SeriesMatches::create([
 
@@ -55,7 +62,7 @@ class SeriesMatchesController extends Controller
                     'startingTime'   =>   $request->startingTime,
                     'endingTime'     =>   $request->endingTime,
                     'format'         =>   $request->format,
-                    'status'         =>   $request->status,
+                    'status'         =>   $status,
                     'seriesId'       =>   $request->seriesId,
 
                 ]);
@@ -67,7 +74,16 @@ class SeriesMatchesController extends Controller
                         return redirect("view-all-matches/$id");
                     }
                 }
-            }else{ // Create match if status is '0'
+            }else{ 
+                
+                // Create match if status is '0'
+                
+                $status = NULL;
+                if ($request->status == 1) {
+                    $status = $request->status;
+                    $status = 'Un-Active';
+                }
+
                 $match = SeriesMatches::create([
 
                     'teamA'          =>   $request->teamA,
@@ -76,7 +92,7 @@ class SeriesMatchesController extends Controller
                     'startingTime'   =>   $request->startingTime,
                     'endingTime'     =>   $request->endingTime,
                     'format'         =>   $request->format,
-                    'status'         =>   $request->status,
+                    'status'         =>   $status,
                     'seriesId'       =>   $request->seriesId,
 
                 ]);
@@ -111,8 +127,16 @@ class SeriesMatchesController extends Controller
         //     return redirect()->back()->withErrors($rules);
         // }else{
             if($request->status == 1){
-                DB::table('series_matches')->where('series_matches.status', '=', 1)
-                ->update(['series_matches.status'=> 0]);
+                DB::table('series_matches')->where('series_matches.status', '=', 'Active')
+                ->update(['series_matches.status'=> 'Un-Active']);
+
+                $status = NULL;
+                if ($request->status == 1) {
+                    
+                    $status = $request->status;
+                    $status = 'Active';
+                
+                }
 
                 $match   =  SeriesMatches::find($request->id);
 
@@ -122,7 +146,7 @@ class SeriesMatchesController extends Controller
                 $match->startingTime  =  $request->startingTime;
                 $match->endingTime    =  $request->endingTime;
                 $match->format        =  $request->format;
-                $match->status        =  $request->status;
+                $match->status        =  $status;
 
                 $id = $match->seriesId;
                 if(!empty($match)){
@@ -134,6 +158,14 @@ class SeriesMatchesController extends Controller
                 }
             }else{
 
+                $status = NULL;
+                if ($request->status == 0) {
+
+                    $status = $request->status;
+                    $status = 'Un-Active';
+
+                }
+
                 $match                =  SeriesMatches::find($request->id);
                 $match->teamA         =  $request->teamA;
                 $match->teamB         =  $request->teamB;
@@ -141,7 +173,7 @@ class SeriesMatchesController extends Controller
                 $match->startingTime  =  $request->startingTime;
                 $match->endingTime    =  $request->endingTime;
                 $match->format        =  $request->format;
-                $match->status        =  $request->status;
+                $match->status        =  $status;
                 $id                   =  $match->seriesId;
 
                 if(!empty($match)){
@@ -188,9 +220,16 @@ class SeriesMatchesController extends Controller
         }
     }
 
-    public function matchData($id)
+    public function match($id)
     {
         $match = SeriesMatches::find($id);
+
+        if ($match->status == 'Active') {
+            $match->status = 1;
+        }else{
+            $match->status = 0;
+        }
+
     	return view('matches.updateMatch',compact('match'));
     }
 

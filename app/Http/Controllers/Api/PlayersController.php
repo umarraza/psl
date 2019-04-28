@@ -107,10 +107,10 @@ class PlayersController extends Controller
     
     public function delete($id){
         $player = Player::find($id);
-        $matchId = $player->matchId;
+        $seriesId = $player->seriesId;
         if(!empty($player)){
             $player->delete();
-            return redirect("view-all-players/$matchId");
+            return redirect("view-all-players/$seriesId");
         }
     }
 
