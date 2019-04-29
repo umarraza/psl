@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 29, 2019 at 12:21 AM
+-- Generation Time: Apr 29, 2019 at 03:15 PM
 -- Server version: 10.1.38-MariaDB
--- PHP Version: 7.1.27
+-- PHP Version: 7.3.2
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -56,9 +56,9 @@ CREATE TABLE `cric-series` (
 --
 
 INSERT INTO `cric-series` (`id`, `seriesName`, `status`, `type`, `createdAt`, `updatedAt`) VALUES
-(24, 'West Indies Vs Kenya', 'Un-Active', 'Tests', '2019-04-21 07:20:30', '2019-04-21 07:20:30'),
+(24, 'Pakistan Vs Austrailia', 'Active', 'Tests', '2019-04-21 07:20:30', '2019-04-21 07:20:30'),
 (25, 'West Indies Vs Ireland', 'Un-Active', 'ODI', '2019-04-23 07:40:44', '2019-04-23 07:40:44'),
-(29, 'Pakistan Vs India', 'Active', 'ODI', '2019-04-28 21:52:34', '2019-04-28 21:52:34');
+(29, 'Austrailia Vs India', 'Un-Active', 'ODI', '2019-04-28 21:52:34', '2019-04-28 21:52:34');
 
 -- --------------------------------------------------------
 
@@ -128,15 +128,26 @@ CREATE TABLE `matches` (
   `id` int(11) NOT NULL,
   `teamA` varchar(100) NOT NULL,
   `teamB` varchar(100) NOT NULL,
+  `teamAId` int(10) NOT NULL,
+  `teamBId` int(10) NOT NULL,
   `unique_id` int(20) NOT NULL,
   `date` varchar(50) NOT NULL,
   `dateTimeGMT` varchar(255) NOT NULL,
-  `type` varchar(10) NOT NULL,
-  `squad` tinyint(3) NOT NULL,
+  `type` varchar(10) DEFAULT NULL,
+  `squad` tinyint(3) DEFAULT NULL,
   `matchStarted` tinyint(3) NOT NULL,
+  `seriesId` int(10) NOT NULL,
   `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `matches`
+--
+
+INSERT INTO `matches` (`id`, `teamA`, `teamB`, `teamAId`, `teamBId`, `unique_id`, `date`, `dateTimeGMT`, `type`, `squad`, `matchStarted`, `seriesId`, `createdAt`, `updatedAt`) VALUES
+(1, 'India', 'Australia', 1, 2, 101010, '2021-03-07 16:18:29', '2021-04-21 12:20:30', NULL, NULL, 1, 24, '2019-04-29 01:42:24', '2019-04-29 01:51:02'),
+(2, 'India', 'Australia', 1, 2, 1022214, '2019-03-07 16:18:29', '2019-04-21 12:20:30', NULL, NULL, 0, 24, '2019-04-29 01:51:43', '2019-04-29 01:51:43');
 
 -- --------------------------------------------------------
 
@@ -279,6 +290,7 @@ CREATE TABLE `players` (
   `name` varchar(50) NOT NULL,
   `designation` varchar(50) NOT NULL,
   `pid` int(20) DEFAULT NULL,
+  `price` int(100) NOT NULL,
   `image` varchar(100) DEFAULT NULL,
   `nameOfTeam` varchar(250) DEFAULT NULL,
   `matchId` int(10) NOT NULL,
@@ -291,8 +303,9 @@ CREATE TABLE `players` (
 -- Dumping data for table `players`
 --
 
-INSERT INTO `players` (`id`, `name`, `designation`, `pid`, `image`, `nameOfTeam`, `matchId`, `seriesId`, `createdAt`, `updatedAt`) VALUES
-(32, 'Umar Raza', 'Bowler', NULL, NULL, 'Pakistan', 24, 24, '2019-04-28 21:22:59', '2019-04-28 21:22:59');
+INSERT INTO `players` (`id`, `name`, `designation`, `pid`, `price`, `image`, `nameOfTeam`, `matchId`, `seriesId`, `createdAt`, `updatedAt`) VALUES
+(32, 'Umar Raza', 'Bowler', 3, 1500000, NULL, 'Pakistan', 24, 24, '2019-04-28 21:22:59', '2019-04-29 01:13:58'),
+(34, 'Hassan Ali', 'Bowler', 5, 1400000, NULL, 'Pakistan', 24, 24, '2019-04-29 01:10:39', '2019-04-29 01:15:13');
 
 -- --------------------------------------------------------
 
@@ -357,8 +370,8 @@ CREATE TABLE `rules` (
 --
 
 INSERT INTO `rules` (`id`, `condition`, `points`, `createdAt`, `updatedAt`) VALUES
-(1, 'runs>50', 100, '2019-04-28 18:52:03', '2019-04-29 03:40:57'),
-(2, 'runs>100', 100, '2019-04-28 18:52:03', '2019-04-29 04:23:23');
+(1, 'runs>50', 100, '2019-04-28 18:52:03', '2019-04-29 00:51:29'),
+(2, 'runs>100', 100, '2019-04-28 18:52:03', '2019-04-28 23:43:51');
 
 -- --------------------------------------------------------
 
@@ -388,8 +401,31 @@ INSERT INTO `series_matches` (`id`, `teamA`, `teamB`, `dateTimeGMT`, `startingTi
 (35, 'Pakistan', 'India', '2019-04-19 10:55:29', '04:00:00', '03:55:29', 'ODI', 'Un-Active', 24, '2019-04-21 07:55:00', '2019-04-21 07:55:00'),
 (40, 'Pakistan', 'Canada', '2019-04-19 10:55:29', '03:55:29', '03:55:29', 'ODI', 'Un-Active', 24, '2019-04-28 21:22:23', '2019-04-28 21:22:23'),
 (41, 'Austrailia', 'Inida', '2019-04-19 07:00:00', '03:55:29', '03:55:29', 'ODI', 'Un-Active', 24, '2019-04-28 21:22:44', '2019-04-28 21:22:44'),
-(42, 'Pakistan', 'Canada', '2019-04-19 10:55:29', '03:55:29', '03:55:29', 'ODI', 'Un-Active', 24, '2019-04-28 22:00:31', '2019-04-28 22:00:31'),
-(43, 'Austrailia', 'Inida', '2019-04-19 10:55:29', '04:00:00', '03:55:29', 'ODI', 'Active', 24, '2019-04-28 22:00:43', '2019-04-28 22:00:43');
+(42, 'Pakistan', 'Canada', '2019-04-19 10:55:29', '03:55:29', '03:55:29', 'ODI', 'Active', 24, '2019-04-28 22:00:31', '2019-04-28 22:00:31'),
+(44, 'Pakistan', 'Bangladesh', '2019-04-21 07:20:30', '2019-04-21 12:20:30', '2019-04-21 12:20:30', 'T20', 'Un-Active', 25, '2019-04-29 04:45:12', '2019-04-29 04:45:12');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `series_teams`
+--
+
+CREATE TABLE `series_teams` (
+  `id` int(10) NOT NULL,
+  `team` varchar(50) NOT NULL,
+  `image` varchar(50) NOT NULL,
+  `seriesId` int(11) NOT NULL,
+  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `series_teams`
+--
+
+INSERT INTO `series_teams` (`id`, `team`, `image`, `seriesId`, `createdAt`, `updatedAt`) VALUES
+(1, 'Pakistan', '1556539532.png', 24, '2019-04-29 07:05:32', '2019-04-29 07:05:32'),
+(2, 'India', '1556539560.png', 24, '2019-04-29 07:06:00', '2019-04-29 07:06:00');
 
 -- --------------------------------------------------------
 
@@ -456,7 +492,8 @@ CREATE TABLE `team_owners` (
 
 INSERT INTO `team_owners` (`id`, `firstName`, `lastName`, `mobileNumber`, `teamMembers`, `moves`, `amountInAccount`, `userId`, `total_points`, `createdAt`, `updatedAt`) VALUES
 (1021, 'Umar', 'Raza', '0303132432', NULL, 120, '1100000000', 1031, 0, '2019-04-01 01:46:52', '2019-04-01 01:46:52'),
-(1022, 'Numan', 'Hashmi', '03334545623', NULL, 66, '12000000', 1032, 0, '2019-04-16 09:56:49', '2019-04-16 04:56:49');
+(1022, 'Numan', 'Hashmi', '03334545623', NULL, 66, '12000000', 1032, 0, '2019-04-16 09:56:49', '2019-04-16 04:56:49'),
+(1023, 'Anas', 'mahmood', '03249470780', NULL, 120, '1100000000', 1033, 0, '2019-04-29 02:50:04', '2019-04-29 02:50:04');
 
 -- --------------------------------------------------------
 
@@ -487,7 +524,7 @@ CREATE TABLE `team_owners_psl` (
 CREATE TABLE `users` (
   `id` int(10) NOT NULL,
   `username` varchar(100) NOT NULL,
-  `email` varchar(50) NOT NULL,
+  `email` varchar(50) DEFAULT NULL,
   `password` varchar(255) NOT NULL,
   `remember_token` varchar(100) DEFAULT NULL,
   `roleId` int(10) NOT NULL,
@@ -510,7 +547,8 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `username`, `email`, `password`, `remember_token`, `roleId`, `resetPasswordToken`, `createdResetPToken`, `avatarFilePath`, `deviceToken`, `onlineStatus`, `verified`, `googleLogin`, `facebookLogin`, `language`, `createdAt`, `updatedAt`) VALUES
 (1031, 'super.admin@admin.com', 'super.admin@admin.com', '$2y$10$sf9teTeJIIgYoOESzaj35Os7qRUHvOIHInnaz3EtueBaH5/dsojY6', 'O1pIZIaqdRFMSvjbmiey3B9JaPYQqSJPfKbMs1WdloVgb3ZmnAjsz4JiQgpS', 3, '123456', NULL, NULL, NULL, 0, 1, NULL, NULL, 'English', '2019-04-28 21:21:31', '2019-04-01 01:46:52'),
-(1032, 'numan11@gmail.com', 'numan11@gmail.com', '$2y$10$cN2caxzXyd0361aXfXq1O.fIWPyIISEpaYhZwl7k/DvAsEzK02oya', NULL, 5, '123456', NULL, NULL, NULL, 0, 1, NULL, NULL, 'Urdu', '2019-04-18 10:11:46', '2019-04-16 00:12:25');
+(1032, 'numan11@gmail.com', 'numan11@gmail.com', '$2y$10$cN2caxzXyd0361aXfXq1O.fIWPyIISEpaYhZwl7k/DvAsEzK02oya', NULL, 5, '123456', NULL, NULL, NULL, 0, 1, NULL, NULL, 'Urdu', '2019-04-18 10:11:46', '2019-04-16 00:12:25'),
+(1033, 'mahmoodanas4012@gmail.com', NULL, '$2y$10$eMSzkNAwgbT/70/wnYD52.biE701ETosQt6gjElOCkSYw51fDFpJe', NULL, 5, '12348765.', NULL, NULL, NULL, 0, 1, NULL, NULL, 'English', '2019-04-29 02:50:04', '2019-04-29 02:50:04');
 
 --
 -- Indexes for dumped tables
@@ -631,6 +669,12 @@ ALTER TABLE `series_matches`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `series_teams`
+--
+ALTER TABLE `series_teams`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `team_members`
 --
 ALTER TABLE `team_members`
@@ -707,7 +751,7 @@ ALTER TABLE `league_members_psl`
 -- AUTO_INCREMENT for table `matches`
 --
 ALTER TABLE `matches`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `matchespsl`
@@ -755,7 +799,7 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT for table `players`
 --
 ALTER TABLE `players`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT for table `players_psl`
@@ -779,7 +823,13 @@ ALTER TABLE `rules`
 -- AUTO_INCREMENT for table `series_matches`
 --
 ALTER TABLE `series_matches`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
+
+--
+-- AUTO_INCREMENT for table `series_teams`
+--
+ALTER TABLE `series_teams`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT for table `team_members`
@@ -797,7 +847,7 @@ ALTER TABLE `team_members_testversion`
 -- AUTO_INCREMENT for table `team_owners`
 --
 ALTER TABLE `team_owners`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1023;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1024;
 
 --
 -- AUTO_INCREMENT for table `team_owners_psl`
@@ -809,7 +859,7 @@ ALTER TABLE `team_owners_psl`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1033;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1034;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
