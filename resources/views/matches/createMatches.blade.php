@@ -18,6 +18,25 @@
                 <form role="form" method="post" action="{{url('new-match')}}">
                 {{ csrf_field() }}
                 <div class="box-body">
+
+                {{--  <div class="form-group">
+                    <label for="exampleFormControlSelect1">Team A:</label>
+                        <select class="form-control" id="exampleFormControlSelect1">
+                        @foreach ($allTeams as $team)
+                            <option>{{$team->team}}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="exampleFormControlSelect1">Example select</label>
+                        <select class="form-control" id="exampleFormControlSelect1">
+                        @foreach ($allTeams as $team)
+                            <option>{{$team->team}}</option>
+                        @endforeach
+                    </select>
+                </div>  --}}
+
                     <div class="form-group">
                         <label for="teamA">Team A:</label>
                         <input type="text" class="form-control" id="teamA" name="teamA" placeholder="Team A">
@@ -27,24 +46,28 @@
                             <input type="text" class="form-control" id="teamA" name="teamB" placeholder="Team B">
                     </div>
                     <div class="form-group">
-                        <label for="dateTimeGMT">Date:</label>
-                        <input type="text" class="form-control" id="dateTimeGMT" name="dateTimeGMT" placeholder="Date">
+                        <label for="unique_id">Unique Id:</label>
+                        <input type="text" class="form-control" id="unique_id" name="unique_id" placeholder="Unique Id">
                     </div>
                     <div class="form-group">
-                        <label for="startingTime">Start Time</label>
-                        <input type="text" class="form-control" id="startingTime" name="startingTime" placeholder="Start Time">
+                        <label for="date">Date:</label>
+                        <input type="text" class="form-control" id="date" name="date" placeholder="Date">
                     </div>
                     <div class="form-group">
-                        <label for="endingTime">End Time:</label>
-                        <input type="text" class="form-control" id="endingTime" name="endingTime" placeholder="End Time">
+                        <label for="dateTimeGMT">Date Time GMT:</label>
+                        <input type="text" class="form-control" id="dateTimeGMT" name="dateTimeGMT" placeholder="Date Time GMT">
+                    </div>
+                    {{--  <div class="form-group">
+                        <label for="type">Type:</label>
+                        <input type="text" class="form-control" id="type" name="type" placeholder="Type">
                     </div>
                     <div class="form-group">
-                        <label for="format">Match Format</label>
-                        <input type="text" class="form-control" id="format" name="format" placeholder="Match Format">
-                    </div>
+                        <label for="squad">Squad:</label>
+                        <input type="text" class="form-control" id="squad" name="squad" placeholder="Squad">
+                    </div>  --}}
                     <div class="form-group">
-                        <label for="status">Match Status</label>
-                        <input type="text" class="form-control" id="status" name="status" placeholder="Match Status">
+                        <label for="matchStarted">Match Started:</label>
+                        <input type="text" class="form-control" id="matchStarted" name="matchStarted" placeholder="Match Started">
                     </div>
                     <input type="hidden" class="form-control" id="type" id="id" name="seriesId" value="{{ $id }}" placeholder="ODIs/T20/Test/Wolrd Cup">
                 </div>

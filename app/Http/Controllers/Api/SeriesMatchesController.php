@@ -1,31 +1,33 @@
-<?php
+<?php   
 
 namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\SeriesMatches;
-use App\Player; 
-use DB;
 use Illuminate\Support\Facades\View;
+
+use DB;
 use Validator;
+use App\Models\Api\ApiMatch as SeriesMatches;
+use App\Models\Api\ApiPlayer as Player;
+use App\Models\Api\ApiSeriesTeam as SeriesTeam;
 
 class SeriesMatchesController extends Controller
 {
 
     public function create(Request $request)
     {
-
         $rules = [
 
-            'teamA'        =>  'required',
-            'teamB'        =>  'required',
-            'dateTimeGMT'  =>  'required',
-            'startingTime' =>  'required',
-            'endingTime'   =>  'required',
-            'format'       =>  'required',
-            'status'       =>  'required',
-            'seriesId'     =>  'required',
+            'teamA'         =>   'required',
+            'teamB'         =>   'required',
+            'unique_id'     =>   'required',
+            'date'          =>   'required',
+            'dateTimeGMT'   =>   'required',
+            // 'type'          =>   'required',
+            // 'squad'         =>   'required',
+            'matchStarted'  =>   'required',
+            'seriesId'      =>   'required',
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -34,6 +36,7 @@ class SeriesMatchesController extends Controller
         }else{
 
         /* 
+
         Status = 1: Match with status 1 mean match is currently being playing between two countries i.e 
         Pakistan Vs opponent.
         Status = 0: No match is currently being playing between pakistan and 
@@ -42,67 +45,35 @@ class SeriesMatchesController extends Controller
         update it to 0 pakistani team can play one match at a time.
         
         */  
-            $status = NULL;
-            if ($request->status == 1) {
-                $status = $request->status;
-                $status = 'Active';
-            }
+            // return $request->teamA;
+            // $team  = SeriesTeam::find(1);
+            // $request->teamA;
+            $teamA = SeriesTeam::where("team", "=", $request->teamA)->first();
+            $teamB = SeriesTeam::where("team", "=", $request->teamB)->first();
+            $teamAId = $teamA->id;
+            $teamBId = $teamB->id;
 
-            if($request->status == 1){
-                    
-                    DB::table('series_matches')->where('series_matches.status', '=', 'Active')
-                    ->update(['series_matches.status'=> 'Un-Active']);
+            $match = SeriesMatches::create([
 
+                'teamA'         =>   $request->teamA,
+                'teamB'         =>   $request->teamB,
+                'teamAId'       =>   $teamAId,
+                'teamBId'       =>   $teamBId,
+                'unique_id'     =>   $request->unique_id,
+                'date'          =>   $request->date,
+                'dateTimeGMT'   =>   $request->dateTimeGMT,
+                'type'          =>   $request->type,
+                'squad'         =>   $request->squad,
+                'matchStarted'  =>   $request->matchStarted,
+                'seriesId'      =>   $request->seriesId,
 
-                $match = SeriesMatches::create([
+            ]);
 
-                    'teamA'          =>   $request->teamA,
-                    'teamB'          =>   $request->teamB,
-                    'dateTimeGMT'    =>   $request->dateTimeGMT,
-                    'startingTime'   =>   $request->startingTime,
-                    'endingTime'     =>   $request->endingTime,
-                    'format'         =>   $request->format,
-                    'status'         =>   $status,
-                    'seriesId'       =>   $request->seriesId,
+            $id = $request->seriesId;
 
-                ]);
-
-                $id = $request->seriesId;
-
-                if(!empty($match)){
-                    if($match->save()){
-                        return redirect("view-all-matches/$id");
-                    }
-                }
-            }else{ 
-                
-                // Create match if status is '0'
-                
-                $status = NULL;
-                if ($request->status == 1) {
-                    $status = $request->status;
-                    $status = 'Un-Active';
-                }
-
-                $match = SeriesMatches::create([
-
-                    'teamA'          =>   $request->teamA,
-                    'teamB'          =>   $request->teamB,
-                    'dateTimeGMT'    =>   $request->dateTimeGMT,
-                    'startingTime'   =>   $request->startingTime,
-                    'endingTime'     =>   $request->endingTime,
-                    'format'         =>   $request->format,
-                    'status'         =>   $status,
-                    'seriesId'       =>   $request->seriesId,
-
-                ]);
-
-                $id = $request->seriesId;
-
-                if(!empty($match)){
-                    if($match->save()){
-                        return redirect("view-all-matches/$id");
-                    }
+            if(!empty($match)){
+                if($match->save()){
+                    return redirect("view-all-matches/$id");
                 }
             }
         }
@@ -111,42 +82,30 @@ class SeriesMatchesController extends Controller
     // Update match details
     public function update(Request $request){
 
-        // $rules = [
-        //     'teamA'        =>  'required',
-        //     'teamB'        =>  'required',
-        //     'dateTimeGMT'  =>  'required',
-        //     'startingTime' =>  'required',
-        //     'endingTime'   =>  'required',
-        //     'format'       =>  'required',
-        //     'status'       =>  'required',
-        //     'seriesId'     =>  'required',
-        // ];
+        $rules = [
 
-        // $validator = Validator::make($request->all(), $rules);
-        // if($validator->fails()){
-        //     return redirect()->back()->withErrors($rules);
-        // }else{
-            if($request->status == 1){
-                DB::table('series_matches')->where('series_matches.status', '=', 'Active')
-                ->update(['series_matches.status'=> 'Un-Active']);
+            'teamA'         =>  'required',
+            'teamB'         =>  'required',
+            'unique_id'     =>  'required',
+            'date'          =>  'required',
+            'dateTimeGMT'   =>  'required',
+            'matchStarted'  =>  'required',
 
-                $status = NULL;
-                if ($request->status == 1) {
-                    
-                    $status = $request->status;
-                    $status = 'Active';
-                
-                }
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+        if($validator->fails()){
+            return redirect()->back()->withErrors($rules);
+        }else{
 
                 $match   =  SeriesMatches::find($request->id);
 
-                $match->teamA         =  $request->teamA;
-                $match->teamB         =  $request->teamB;
-                $match->dateTimeGMT   =  $request->dateTimeGMT;
-                $match->startingTime  =  $request->startingTime;
-                $match->endingTime    =  $request->endingTime;
-                $match->format        =  $request->format;
-                $match->status        =  $status;
+                $match->teamA          =  $request->teamA;
+                $match->teamB          =  $request->teamB;
+                $match->unique_id      =  $request->unique_id;
+                $match->date           =  $request->date;
+                $match->dateTimeGMT    =  $request->dateTimeGMT;
+                $match->matchStarted   =  $request->matchStarted;
 
                 $id = $match->seriesId;
                 if(!empty($match)){
@@ -156,35 +115,7 @@ class SeriesMatchesController extends Controller
                         return "Request Unsuccessfull";
                     }
                 }
-            }else{
-
-                $status = NULL;
-                if ($request->status == 0) {
-
-                    $status = $request->status;
-                    $status = 'Un-Active';
-
-                }
-
-                $match                =  SeriesMatches::find($request->id);
-                $match->teamA         =  $request->teamA;
-                $match->teamB         =  $request->teamB;
-                $match->dateTimeGMT   =  $request->dateTimeGMT;
-                $match->startingTime  =  $request->startingTime;
-                $match->endingTime    =  $request->endingTime;
-                $match->format        =  $request->format;
-                $match->status        =  $status;
-                $id                   =  $match->seriesId;
-
-                if(!empty($match)){
-                    if($match->save()){
-                        return redirect("view-all-matches/$id");
-                    }else{
-                        return "Request Unsuccessfull";
-                    }
-                }
-            }
-        // }
+        }
     }
     
     // Show all matches relevant to a particular series

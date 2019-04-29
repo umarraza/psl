@@ -319,24 +319,22 @@ class PlayerController extends Controller
                'status' => false
             ];
             
-            $allSeries = Series::all();
-
-            foreach ($allSeries as $series){
-                if($series->status == 1){
-                    $seriesId = $series->id;
-                    $seriesPlayers = Player::where('seriesId', '=', $seriesId)->get();
-                }
-            }
+            $series = Series::where('status','Active')->first();
+            
+            $seriesId   =  $series->id;
+            $allPlayers =  Player::where('seriesId', '=', $seriesId)->get();
 
             // $players = Player::all();
             // foreach ($players as $player) {
             //     $player['image'] = "http://fantasycricleague.online/PSL/storage/app/public/".$player['image'];
             // }
-            $response['data']['code']       = 200;
-            $response['data']['message']    = 'Request Successfull';
-            $response['data']['result']     = $seriesPlayers;
-            $response['status']             = true;    
+
+            $response['data']['code']       =  200;
+            $response['data']['message']    =  'Request Successfull';
+            $response['data']['result']     =  $allPlayers;
+            $response['status']             =  true;    
         }
+        
         return $response;
     }
 

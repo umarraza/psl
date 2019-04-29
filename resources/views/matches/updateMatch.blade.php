@@ -26,24 +26,20 @@
                             <input type="text" class="form-control" id="teamB" name="teamB" value="{{$match->teamB}}" >
                     </div>
                     <div class="form-group">
-                        <label for="dateTimeGMT">Date:</label>
+                        <label for="unique_id">Unique Id:</label>
+                        <input type="text" class="form-control" id="unique_id" name="unique_id" value="{{$match->unique_id}}" >
+                    </div>
+                    <div class="form-group">
+                        <label for="date">Date</label>
+                        <input type="text" class="form-control" id="date" name="date" value="{{$match->date}}" >
+                    </div>
+                    <div class="form-group">
+                        <label for="dateTimeGMT">Date Time GMT:</label>
                         <input type="text" class="form-control" id="dateTimeGMT" name="dateTimeGMT" value="{{$match->dateTimeGMT}}" >
                     </div>
                     <div class="form-group">
-                        <label for="startingTime">Start Time</label>
-                        <input type="text" class="form-control" id="startingTime" name="startingTime" value="{{$match->startingTime}}" >
-                    </div>
-                    <div class="form-group">
-                        <label for="endingTime">End Time:</label>
-                        <input type="text" class="form-control" id="endingTime" name="endingTime" value="{{$match->endingTime}}" >
-                    </div>
-                    <div class="form-group">
-                        <label for="format">Match Format</label>
-                        <input type="text" class="form-control" id="format" name="format" value="{{$match->format}}" >
-                    </div>
-                    <div class="form-group">
-                        <label for="status">Match Status</label>
-                        <input type="text" class="form-control" id="status" name="status" value="{{$match->status}}" >
+                        <label for="matchStarted">Match Started</label>
+                        <input type="text" class="form-control" id="matchStarted" name="matchStarted" value="{{$match->matchStarted}}" >
                     </div>
                     <input type="hidden" class="form-control" id="type" id="id" name="id" value="{{ $match->id }}" >
                 </div>

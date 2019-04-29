@@ -20,7 +20,7 @@ use App\Models\Api\ApiUser as User;
 use App\Models\Api\ApiMatch as Match;
 use App\Models\Api\ApiSeries as Series;
 use App\Models\Api\ApiSeriesMatches as SeriesMatches;
-
+use App\Models\Api\ApiSeriesTeam as SeriesTeam;
 
 class MatchController extends Controller
 {
@@ -29,14 +29,13 @@ class MatchController extends Controller
         $user = JWTAuth::toUser($request->token);
         $response = [
                 'data' => [
-                    'code'      => 400,
-                    'errors'     => '',
-                    'message'   => 'Invalid Token! User Not Found.',
+                    'code'      =>  400,
+                    'errors'    =>  '',
+                    'message'   =>  'Invalid Token! User Not Found.',
                 ],
                 'status' => false
             ];
 
-        //return $request;
         if(!empty($user) && $user->isSuperAdmin())
         {
     	
@@ -48,14 +47,14 @@ class MatchController extends Controller
                'status' => false
             ];
             $rules = [
-                'teamA'			=> 'required',
-                'teamB'     	=> 'required',
-                'unique_id' => 'required',
-                'date'   => 'required',
-                'dateTimeGMT'         => 'required',
-                'type' => 'required',
-                'squad'   => 'required',
-                'matchStarted'   => 'required',
+                'teamA'	        => 'required',
+                'teamB'         => 'required',
+                'unique_id'     => 'required',
+                'date'          => 'required',
+                'dateTimeGMT'   => 'required',
+                'type'          => 'required',
+                'squad'         => 'required',
+                'matchStarted'  => 'required',
             ];
 
 
@@ -123,7 +122,9 @@ class MatchController extends Controller
             if ($validator->fails()) {
                 $response['data']['message'] = 'Invalid input values.';
                 $response['data']['errors'] = $validator->messages();
-            }else
+
+            }
+            else
             {
 
                 $newMatch = Match::where('id','=',$request->id)->update([
@@ -197,29 +198,33 @@ class MatchController extends Controller
         $user = JWTAuth::toUser($request->token);
         $response = [
                 'data' => [
-                    'code'      => 400,
-                    'errors'     => '',
-                    'message'   => 'Invalid Token! User Not Found.',
+                    'code'      =>  400,
+                    'errors'    =>  '',
+                    'message'   =>  'Invalid Token! User Not Found.',
                 ],
                 'status' => false
             ];
         if(!empty($user) )
         {
 
-            $allSeries = Series::all();
-
-            foreach ($allSeries as $series){
-
-                if ($series->status == 1){
+            $series = Series::where('status','Active')->first();
 
                     $seriesId   =  $series->id;
-                    $seriesMatches =  SeriesMatches::where('seriesId', '=', $seriesId)->get();
+                    $allMatches =  Match::where('seriesId', '=', $seriesId)->get();
+                    
+                    foreach($allMatches as $match)
+                    {
+                        $seriesTeamsA = SeriesTeam::find($match->teamAId);
+                        $match['teamAImage'] = $seriesTeamsA->image;
 
+                        $seriesTeamsB = SeriesTeam::find($match->teamBId);
+                        $match['teamBImage'] = $seriesTeamsB->image;
+                    }
                     if (!empty($allMatches)){
 
                         $response['data']['code']       = 200;
                         $response['status']             = true;
-                        $response['data']['result']    	= $seriesMatches;
+                        $response['data']['result']    	= $allMatches;
                         $response['data']['message']    = 'Request Successfull';
 
                     } else {
@@ -228,8 +233,6 @@ class MatchController extends Controller
                         $response['status']             = flase;
                         $response['data']['message']    = 'No Matches Found!';
                     }
-                }
-            }
 
 
             // $matches = Match::all();
@@ -257,4 +260,104 @@ class MatchController extends Controller
         }
         return $response;
     }
+
+    public function allTeams(Request $request)
+    {
+        $user = JWTAuth::toUser($request->token);
+        $response = [
+                'data' => [
+                    'code'      => 400,
+                    'errors'     => '',
+                    'message'   => 'Invalid Token! User Not Found.',
+
+                ],
+                'status' => false
+            ];
+        if(!empty($user))
+        {
+    	
+            $response = [
+                'data' => [
+                    'code' => 400,
+                    'message' => 'Something went wrong. Please try again later!',
+                ],
+               'status' => false
+            ];
+            
+                $series = Series::where('status', '=', 'Active')->first();
+
+                $seriesId = $series->id;
+                
+                $teams = SeriesTeam::where('seriesId','=',$seriesId)->get();
+
+                if ($teams) {
+                    $response['data']['code']       = 200;
+                    $response['status']             = true;
+                    $response['data']['result']     = $teams;
+                    $response['data']['message']    = 'Request Successfull';
+                }else{
+                    $response['data']['code']       = 400;
+                    $response['status']             = false;
+                    $response['data']['message']    = 'Request Unsuccessfull';
+                }
+                
+        }
+        
+        return $response;
+    }
+
+
+    public function addTeam(Request $request)
+    {
+        $rules = [
+            'team'			 =>  'required',
+            'image'     	 =>  'required',
+            'seriesId'       =>  'required',
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($rules);
+        } else {
+
+            $image = $request->file('image');
+
+            $filename = time() . '.'. $image->getClientOriginalExtension();
+
+            $path =  \Storage::disk('public')->put('filename', $image);
+            
+            $team = SeriesTeam::create([
+                
+                'team'     => $request->get('team'),
+                'image'    => $filename,
+                'seriesId' => $request->get('seriesId'),
+
+            ]); 
+
+            
+            // $file = $request->file('image');
+
+            // \Storage::disk('public')->put('filename', $file);
+
+            $id = $team->seriesId;
+            
+            if ($team->save()) {
+                return redirect("view-teams/$id");
+            }
+        }
+        return $response;
+    }
+
+        /* ============ Show all the Active/Inactive series ============ */
+
+        public function show($id)
+        {
+            $teams  =  SeriesTeam::all();
+            if ( !empty($teams)) {
+    
+                return view('teams.viewTeams',compact('teams','id'));
+            }
+        }
+
+
 }

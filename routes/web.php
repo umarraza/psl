@@ -12,6 +12,7 @@ use App\User;
 */
 use App\SeriesMatches;
 use App\Models\Api\ApiRules as Rules;
+use App\Models\Api\ApiSeriesTeam as SeriesTeam;
 
 use App\Series;  
 
@@ -22,7 +23,8 @@ use App\Series;
     });
 
     Route::get('/create-matches-form/{id}', function ($id) {
-        return view('matches.createMatches', compact('id'));
+        $allTeams = SeriesTeam::all();
+        return view('matches.createMatches', compact('id', 'allTeams'));
     });
     Route::get('/create-series', function () {
         return view('series.createSeries');
@@ -41,6 +43,11 @@ use App\Series;
         }
     });
 
+    Route::get('/create-team-form/{id}', function ($id) {
+        $seriesId = $id;
+        return view('teams.createTeam', compact('seriesId'));
+
+    });
 
     Route::group(['middleware' => ['web']], function () {
         
@@ -61,7 +68,6 @@ use App\Series;
     Route::post('/update-match','Api\SeriesMatchesController@update');	
     
     
-    
                 /* ====== Players Routes ====== */
     Route::post('/new-player','Api\PlayersController@store');                                          			
     Route::get('/view-all-players/{id}','Api\PlayersController@show');
@@ -70,11 +76,15 @@ use App\Series;
     Route::get('/update-player-form/{id}','Api\PlayersController@player');	
     });
 
+                /* ====== Rules Routes ====== */
 
     Route::post('/update-rule/{id}','Api\RulesController@updateRule');	
     Route::get('/update-rule-form/{id}','Api\RulesController@ruleData');	
 
+                /* ====== Teams Routes ====== */
 
+    Route::post('/new-team','Api\MatchController@addTeam');                                          			
+    Route::get('/view-teams/{id}','Api\MatchController@show');
 
 
 

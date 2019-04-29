@@ -26,7 +26,6 @@ class AppCommand extends Model
     ];
 
 
-
     public function getArrayResponse() {
         return [
              'id'   			=> $this->id,
@@ -37,8 +36,6 @@ class AppCommand extends Model
     
     public static function matchesChecker0()
     {
-        
-        
         
         $oldMatches = Match::where("matchStarted",'=',0)->get();
         foreach ($oldMatches as $value) 
@@ -54,7 +51,6 @@ class AppCommand extends Model
 
 
         $nextMatchRecord = Match::where("matchStarted",'=',0)->first();
-
 
         $currentTime = Carbon::now();
         $nextMatch = Carbon::parse($nextMatchRecord->dateTimeGMT);
@@ -113,14 +109,14 @@ class AppCommand extends Model
                 foreach ($teamMembers as $member) {
 
                     $member = MatchWiseTeamRecord::create([
-                                                                "matchId" => $nextMatchRecord->id,
-                                                                "playerId" => $member->playerId,
-                                                                "ownerId" => $member->ownerId,
-                                                                "points" => $member->points,
-                                                                "matchRole" => $member->matchRole,
-                                                                "playerId" => $member->playerId,
-                                                                "pid" => $member->pid,
-                                                            ]);
+                                        "matchId" => $nextMatchRecord->id,
+                                        "playerId" => $member->playerId,
+                                        "ownerId" => $member->ownerId,
+                                        "points" => $member->points,
+                                        "matchRole" => $member->matchRole,
+                                        "playerId" => $member->playerId,
+                                        "pid" => $member->pid,
+                                    ]);
                 }
                 
                 $nextMatchRecord->type = "Twenty20..";
@@ -138,6 +134,7 @@ class AppCommand extends Model
     
     public static function statsChecker()
     {
+
         $matchesCron = Match::where('matchStarted','=',1)->orderBy('id','desc')->first();
         $myMatchId = $matchesCron->id; 
         $now = Carbon::now();

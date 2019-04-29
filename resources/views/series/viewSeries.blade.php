@@ -37,9 +37,9 @@
                             <td>
                                 <a href="{{url('/view-all-matches/'.$series->id)}}" type="button" class="btn btn-info">View Matches</a>
                                 <a href="{{url('/view-all-players/'.$series->id)}}" type="button" class="btn btn-info">View Players</a>
+                                <a href="{{url('/create-team-form/'.$series->id)}}" type="button" class="btn btn-info">Create Team</a>
                                 <a href="{{url('/update-series-form/'.$series->id)}}" type="button" class="btn btn-warning">Edit</a>
                                 <a href="{{url('/delete-series/'.$series->id)}}" type="button" class="btn btn-danger">Delete</a>
-
                             </td>
                       </tr>
                       @php $count++; @endphp

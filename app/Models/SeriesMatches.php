@@ -15,6 +15,8 @@ class SeriesMatches extends Model
     protected $fillable = [
         'teamA',
         'teamB',
+        'teamAId',
+        'teamBId',
         'dateTimeGMT',
         'startingTime',
         'endingTime',

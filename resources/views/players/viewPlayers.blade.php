@@ -6,6 +6,7 @@
     <div class="box-header">
         <h3 class="box-title">All Players</h3>
         <div class="pull-right">
+            <a href="{{ url('view-all-series/') }}" type="button" class="btn btn-danger">Back</a>
             <a href="{{ url('create-player-form/'.$id) }}" type="button" class="btn btn-primary">Add New</a>
         </div>
     </div>
@@ -19,6 +20,8 @@
                     <th>Sr#</th>
                     <th>Player Name:</th>
                     <th>Player Role:</th>
+                    <th>Price:</th>
+                    <th>pid:</th>
                     <th>Team Name:</th>
                 </tr>
             </thead>
@@ -30,6 +33,8 @@
                             <td>{{ $count }}</td>
                             <td>{{ $player->name }}</td>
                             <td>{{ $player->designation }}</td>
+                            <td>{{ $player->price }}</td>
+                            <td>{{ $player->pid }}</td>
                             <td>{{ $player->nameOfTeam }}</td>
                             <td>
                                 <a href="{{url('/update-player-form/'.$player->id)}}" type="button" class="btn btn-warning">Edit</a>

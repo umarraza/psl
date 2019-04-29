@@ -7,7 +7,9 @@ use App\Http\Controllers\Controller;
 use Validator;
 use App\SeriesMatches;
 use App\Series; 
-use App\Player; 
+// use App\Player; 
+use App\Models\Api\ApiPlayer as Player;
+
 use DB;
 
 class PlayersController extends Controller
@@ -20,7 +22,8 @@ class PlayersController extends Controller
             
             'name'         =>  'required',
             'designation'  =>  'required',
-            // 'pid'          =>  'required',
+            'price'        =>  'required',
+            'pid'          =>  'required|unique:players',
             // 'image'        =>  'required',
             'nameOfTeam'   =>  'required',
             'matchId'      =>  'required',
@@ -32,16 +35,17 @@ class PlayersController extends Controller
         if($validator->fails()){
             return redirect()->back()->withErrors($rules);
         }else{
-
+            
                 $player = Player::create([
 
-                'name'         =>  $request->name,
-                'designation'  =>  $request->designation,
-                'pid'          =>  $request->pid,
-                'image'        =>  $request->image,
-                'nameOfTeam'   =>  $request->nameOfTeam,
-                'matchId'      =>  $request->matchId,
-                'seriesId'     =>  $request->seriesId,
+                    'name'         =>  $request->name,
+                    'designation'  =>  $request->designation,
+                    'price'        =>  $request->price,
+                    'pid'          =>  $request->pid,
+                    // 'image'        =>  $request->image,
+                    'nameOfTeam'   =>  $request->nameOfTeam,
+                    'matchId'      =>  $request->matchId,
+                    'seriesId'     =>  $request->seriesId,
         ]);
 
             $id = $request->matchId;
@@ -70,8 +74,11 @@ class PlayersController extends Controller
                  
                 $player  =  Player::find($request->id);
                 $matchId = $player->matchId;
+
                 $player->name          =  $request->name;
                 $player->designation   =  $request->designation;
+                $player->price         =  $request->price;
+                $player->pid           =  $request->pid;
                 $player->nameOfTeam    =  $request->nameOfTeam;
  
                 if($player->save()){

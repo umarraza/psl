@@ -50,7 +50,7 @@ class MatchWiseTeamRecordTestVersion extends Model
              'player'     	=> $this->player->getArrayResponse(),
              'points'  		=> $this->points,
              'matchRole'    => $this->matchRole,
-             'pid'    => $this->pid,
+             'pid'          => $this->pid,
         ];
     }
 }

@@ -23,6 +23,14 @@
                             <input type="text" class="form-control" id="designation" name="designation" placeholder="Player Role">
                     </div>
                     <div class="form-group">
+                        <label for="price">Price:</label>
+                        <input type="text" class="form-control" id="price" name="price" placeholder="Price">
+                    </div>
+                    <div class="form-group">
+                        <label for="pid">Player Id:</label>
+                        <input type="text" class="form-control" id="pid" name="pid" placeholder="pid">
+                    </div>
+                    <div class="form-group">
                         <label for="nameOfTeam">Team Name:</label>
                         <input type="text" class="form-control" id="nameOfTeam" name="nameOfTeam" placeholder="Name of Team">
                     </div>

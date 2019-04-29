@@ -38,8 +38,7 @@ class SeriesController extends Controller
             if ($request->status == 1) {
                 $status = $request->status;
                 $status = 'Active';
-            }
-            if($request->status == 1){
+
                 DB::table('cric-series')->where('cric-series.status', '=', 'Active')
                                         ->update(['cric-series.status'=> 'Un-Active']);
                 $series = Series::create([
@@ -51,7 +50,7 @@ class SeriesController extends Controller
                         return redirect('view-all-series');
                     }else{
                         return "Request Unsuccessfull";
-                    }   
+                    }
             }else{            
 
                 // Create series if status is 0 or series is currently not active. 
@@ -97,12 +96,9 @@ class SeriesController extends Controller
                 ->update(['cric-series.status'=> 'Un-Active']);
 
                 $status = NULL;
-                if ($request->status == 1) {
-                    
-                    $status = $request->status;
-                    $status = 'Active';
-                
-                }
+
+                $status = $request->status;
+                $status = 'Active';
 
                 $series              =  Series::find($request->id);
                 $series->seriesName  =  $request->seriesName;
@@ -114,7 +110,10 @@ class SeriesController extends Controller
                 }else{
                     return "Request Unsuccessfull";
                 }
-            }else{
+
+            }
+            else
+            {
 
                 $status = NULL;
                 if ($request->status == 0) {

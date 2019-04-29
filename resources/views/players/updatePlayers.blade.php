@@ -26,6 +26,18 @@
                 </div>
             </div>
             <div class="form-group">
+                <label for="price" class="col-sm-2 control-label">Price:</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" id="price" name="price"  placeholder=""  value="{{$player->price}}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="pid" class="col-sm-2 control-label">Player Id:</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" id="pid" name="pid"  placeholder=""  value="{{$player->pid}}">
+                </div>
+            </div>
+            <div class="form-group">
                 <label for="nameOfTeam" class="col-sm-2 control-label">Name of Team:</label>
                 <div class="col-sm-8">
                     <input type="text" class="form-control" id="nameOfTeam" name="nameOfTeam"  placeholder=""  value="{{$player->nameOfTeam}}">

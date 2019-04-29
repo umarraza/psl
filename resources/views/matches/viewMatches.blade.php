@@ -20,11 +20,10 @@
                     <th>Sr#</th>
                     <th>Team A:</th>
                     <th>Team B:</th>
+                    <th>Unique Id:</th>
                     <th>Date:</th>
-                    <th>Start Time:</th>
-                    <th>End Time:</th>
-                    <th>Match Format:</th>
-                    <th>Status</th>
+                    <th>Date Time GMT:</th>
+                    <th>Match Started:</th>
                 </tr>
             </thead>
 
@@ -35,11 +34,10 @@
                             <td>{{ $count }}</td>
                             <td>{{ $match->teamA }}</td>
                             <td>{{ $match->teamB }}</td>
+                            <td>{{ $match->unique_id }}</td>
+                            <td>{{ $match->date }}</td>
                             <td>{{ $match->dateTimeGMT }}</td>
-                            <td>{{ $match->startingTime }}</td>
-                            <td>{{ $match->endingTime }}</td>
-                            <td>{{ $match->format }}</td>
-                            <td>{{ $match->status }}</td>
+                            <td>{{ $match->matchStarted }}</td>
 
 
                             <td>

@@ -74,6 +74,7 @@ Route::group(['middleware' => 'jwt.auth'], function () {
 	// List Matches
 	Route::get('list-matches','Api\MatchController@listMatches');
 
+	Route::get('all-teams','Api\MatchController@allTeams');
 
 
 	//=========================== Team Owners =========================//

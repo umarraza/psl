@@ -21,25 +21,31 @@ class Player extends Model
      * @var array
      */
     protected $fillable = [
+        
         'name',
+        'designation',
         'price',
         'pid',
-        'designation',
         'image',
-        'nameOfTeam'
+        'nameOfTeam',
+        'matchId',
+        'seriesId'
+
     ];
 
 
 
     public function getArrayResponse() {
         return [
-             'id'     => $this->id,
-             'name'     => $this->name,
-             'price'    => $this->price,
-             'pid'      => $this->pid,
-             'nameOfTeam'      => $this->nameOfTeam,
-             'designation'   => $this->designation,
-             'image'   => "http://fantasycricleague.online/PSL/storage/app/public/".$this->image,
+             'id'          => $this->id,
+             'name'        => $this->name,
+             'designation' => $this->designation,
+             'price'       => $this->price,
+             'pid'         => $this->pid,
+             'nameOfTeam'  => $this->nameOfTeam,
+             'matchId'     => $this->matchId,
+             'seriesId'    => $this->seriesId,
+             'image'       => "http://fantasycricleague.online/PSL/storage/app/public/".$this->image,
         ];
     }
 }

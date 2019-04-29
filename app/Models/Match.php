@@ -21,6 +21,7 @@ class Match extends Model
      * @var array
      */
     protected $fillable = [
+        
         'teamA',
         'teamB',
         'unique_id',
@@ -29,6 +30,8 @@ class Match extends Model
         'type',
         'squad',
         'matchStarted',
+        'seriesId',
+
     ];
 
 
