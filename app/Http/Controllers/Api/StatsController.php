@@ -11,6 +11,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
+
 //// JWT ////
 use JWTAuthException;
 use JWTAuth;
@@ -20,13 +21,14 @@ use App\Models\Api\ApiUser as User;
 use App\Models\Api\ApiTeamOwner as TeamOwner;
 use App\Models\Api\ApiMatchWiseTeamRecord as MatchWiseTeamRecord;
 use App\Models\Api\ApiPlayer as Player;
+use App\Models\Api\ApiTeamMember as TeamMember;
+
 
 class StatsController extends Controller
 {
     public function updateStats(Request $request)
     {
-        $user = JWTAuth::toUser($request->token);
-        
+    	$user = JWTAuth::toUser($request->token);
         $response = [
                 'data' => [
                     'code'      => 400,
@@ -48,7 +50,7 @@ class StatsController extends Controller
             $teamMembers = TeamMember::where('points', '!=', 0)->update(['points'=>0]);
             
             
-            $api_url  = "http://cricapi.com/api/fantasySummary?apikey=bFm326931rSZTuCWDDlUWHdxDHn2&unique_id=1157245";
+            $api_url  = "http://cricapi.com/api/fantasySummary?apikey=bFm326931rSZTuCWDDlUWHdxDHn2&unique_id=1152566";
             //  $api_url  = "http://cricapi.com/api/fantasySummary?apikey=<apikey>&unique_id=<unique_id>"
 
             //  Initiate curl
@@ -350,5 +352,101 @@ class StatsController extends Controller
                         }
                     }
         return $owners;
+    }
+
+    public function cheack(Request $request)
+    {
+        $response = [
+            'data' => [
+                'code' => 400,
+                'message' => 'Something went wrong. Please try again later!',
+            ],
+            'status' => false
+        ];
+        $rules = [
+            'teamData'    =>   'required',
+        ];
+        
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            $response['data']['message'] = 'Invalid input values.';
+            $response['data']['errors'] = $validator->messages();
+        }
+        else
+        {
+            $id           =  $request->id;
+            $teamMembers  =  TeamMember::find($id);
+            $playersData  =  $teamMembers->playerData;
+            $ownerId      =  $teamMembers->ownerId;
+            
+            $member = MatchWiseTeamRecord::create([
+                                "matchId" => $id,
+                                "ownerId" => $ownerId,
+                                "playerData" => $playersData,
+                            ]);
+            if($member->save())
+            {
+                $response['data']['code']       = 200;
+                $response['status']             = true;
+                $response['data']['result']     = $member;
+                $response['data']['message']    = 'Request successfull';
+            }
+        }
+        return $response;
+    }
+
+    public function points(Request $request)
+    {
+        $response = [
+            'data' => [
+                'code' => 400,
+                'message' => 'Something went wrong. Please try again later!',
+            ],
+            'status' => false
+        ];
+        $rules = [
+            'pid'                 =>   'required',
+            'matchId'             =>   'required',
+            // 'pointsToAdd'         =>   'required',
+            // 'pointsToAddCaptin'   =>   'required',
+
+        ];
+        
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            $response['data']['message'] = 'Invalid input values.';
+            $response['data']['errors'] = $validator->messages();
+        }
+        else
+        {
+            $pid                 =   $request->get('pid');
+            $matchId             =   $request->get('matchId');
+            // $pointsToAdd         =   300;
+            // $pointsToAddCaptin   =   500;
+            
+            $teamMembers = MatchWiseTeamRecord::where('matchId','=',$matchId)->where('playerData','like', '%' . $pid . '%')->get();
+            $playerData = "";
+            foreach ($teamMembers as $teamMember) 
+            {
+                $decodedData = json_decode($teamMember->playerData);
+                foreach($decodedData as $player)
+                {
+                    if($player->pid == $pid)
+                    {
+                        if($player->matchRole == "Man Of Match")
+                        {
+                            $player->points =  $player->points * 3;
+                        }
+                    }
+                }
+                $teamMember->playerData = json_encode($decodedData);
+                if($teamMember->save()){
+                    $response['data']['code']     =  200;
+                    $response['data']['result']   =  $teamMember;
+                    $response['data']['message']  =  "Request Successfull!!";
+                }
+            }
+        }
+        return $response;
     }
 }

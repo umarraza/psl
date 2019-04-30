@@ -25,7 +25,6 @@ class AppCommand extends Model
         'status',
     ];
 
-
     public function getArrayResponse() {
         return [
              'id'   			=> $this->id,
@@ -51,6 +50,7 @@ class AppCommand extends Model
 
 
         $nextMatchRecord = Match::where("matchStarted",'=',0)->first();
+
 
         $currentTime = Carbon::now();
         $nextMatch = Carbon::parse($nextMatchRecord->dateTimeGMT);
@@ -109,14 +109,14 @@ class AppCommand extends Model
                 foreach ($teamMembers as $member) {
 
                     $member = MatchWiseTeamRecord::create([
-                                        "matchId" => $nextMatchRecord->id,
-                                        "playerId" => $member->playerId,
-                                        "ownerId" => $member->ownerId,
-                                        "points" => $member->points,
-                                        "matchRole" => $member->matchRole,
-                                        "playerId" => $member->playerId,
-                                        "pid" => $member->pid,
-                                    ]);
+                                            "matchId"    =>  $nextMatchRecord->id,
+                                            "playerId"   =>  $member->playerId,
+                                            "ownerId"    =>  $member->ownerId,
+                                            "points"     =>  $member->points,
+                                            "matchRole"  =>  $member->matchRole,
+                                            "playerId"   =>  $member->playerId,
+                                            "pid"        =>  $member->pid,
+                                        ]);
                 }
                 
                 $nextMatchRecord->type = "Twenty20..";
@@ -134,7 +134,6 @@ class AppCommand extends Model
     
     public static function statsChecker()
     {
-
         $matchesCron = Match::where('matchStarted','=',1)->orderBy('id','desc')->first();
         $myMatchId = $matchesCron->id; 
         $now = Carbon::now();
@@ -253,20 +252,32 @@ class AppCommand extends Model
                             $numOf6s = $value2->sixS;
                             $pointsToAdd+=($numOf6s*6);
     
+                        // ===================================================================================================== //
+
                             $pointsToAddCaptin = $pointsToAdd * 2;
     
-                            $teamMembers = MatchWiseTeamRecord::where('matchId','=',$myMatchId)->where('pid','=',$pid)->get();
-    
+                            $teamMembers = MatchWiseTeamRecord::where('matchId','=',$matchId)->where('playerData','like', '%' . $pid . '%')->get();
+                            $playerData = "";
+
                             foreach ($teamMembers as $teamMember) 
                             {
-                                $singleValue = MatchWiseTeamRecord::find($teamMember->id);
-    
-                                if($singleValue->matchRole == "Captin")
-                                    $singleValue->points = $pointsToAddCaptin;
-                                else
-                                    $singleValue->points = $pointsToAdd;
-    
-                                $singleValue->save();
+                                $decodedData = json_decode($teamMember->playerData);
+                                foreach($decodedData as $player)
+                                {
+                                    if($player->pid == $pid)
+                                    {
+                                        if($player->matchRole == "captain")
+                                        {
+                                            $player->points =  $pointsToAddCaptin;
+                                        }
+                                        else
+                                        {
+                                            $player->points =  $pointsToAdd;
+                                        }
+                                    }
+                                }
+                                $teamMember->playerData = json_encode($decodedData);
+                                $teamMember->save();
                             }
                         }
                     }
@@ -335,19 +346,32 @@ class AppCommand extends Model
                                 $pointsToAdd-=50;
                             }
     
+                    // ================================================== CAPTAIN =================================================== //
+
                             $pointsToAddCaptin = $pointsToAdd * 2;
-    
-                            $teamMembers = MatchWiseTeamRecord::where('matchId','=',$myMatchId)->where('pid','=',$pid)->get();
+
+                            $teamMembers = MatchWiseTeamRecord::where('matchId','=',$matchId)->where('playerData','like', '%' . $pid . '%')->get();
+                            $playerData = "";
+
                             foreach ($teamMembers as $teamMember) 
                             {
-                                $singleValue = MatchWiseTeamRecord::find($teamMember->id);
-    
-                                if($singleValue->matchRole == "Captin")
-                                    $singleValue->points = $singleValue->points + $pointsToAddCaptin;
-                                else
-                                    $singleValue->points = $singleValue->points + $pointsToAdd;
-    
-                                $singleValue->save();
+                                $decodedData = json_decode($teamMember->playerData);
+                                foreach($decodedData as $player)
+                                {
+                                    if($player->pid == $pid)
+                                    {
+                                        if($player->matchRole == "captain")
+                                        {
+                                            $player->points =  $pointsToAddCaptin;
+                                        }
+                                        else
+                                        {
+                                            $player->points =  $pointsToAdd;
+                                        }
+                                    }
+                                }
+                                $teamMember->playerData = json_encode($decodedData);
+                                $teamMember->save();
                             }
                         } 
                     }
@@ -391,40 +415,81 @@ class AppCommand extends Model
                             {
                                 $pointsToAdd+=0;
                             }
+                    // ===================================================================================================== //
     
                             $pointsToAddCaptin = $pointsToAdd * 2;
     
-                            $teamMembers = MatchWiseTeamRecord::where('matchId','=',$myMatchId)->where('pid','=',$pid)->get();
+                            $teamMembers = MatchWiseTeamRecord::where('matchId','=',$matchId)->where('playerData','like', '%' . $pid . '%')->get();
+
+                            $playerData = "";
+
                             foreach ($teamMembers as $teamMember) 
                             {
-                                $singleValue = MatchWiseTeamRecord::find($teamMember->id);
-    
-                                if($singleValue->matchRole == "Captin")
-                                    $singleValue->points = $singleValue->points + $pointsToAddCaptin;
-                                else
-                                    $singleValue->points = $singleValue->points + $pointsToAdd;
-    
-                                $singleValue->save();
+                                $decodedData = json_decode($teamMember->playerData);
+                                foreach($decodedData as $player)
+                                {
+                                    if($player->pid == $pid)
+                                    {
+                                        if($player->matchRole == "captain")
+                                        {
+                                            $player->points =  $pointsToAddCaptin;
+                                        }
+                                        else
+                                        {
+                                            $player->points =  $pointsToAdd;
+                                        }
+                                    }
+                                }
+                                $teamMember->playerData = json_encode($decodedData);
+                                $teamMember->save();
                             }
                         } 
                     }
     
-                    // MAN OF THE MATCH
-                    $man_of_the_match_pid = $cricketMatches['result']->data->man_of_the_match->pid;
-                    $teamMembers = MatchWiseTeamRecord::where('matchId','=',$myMatchId)->where('pid','=',$man_of_the_match_pid)->get();
-                    
+                    // ================================================== MAN OF THE MATCH =================================================== //
+                
+                    $teamMembers = MatchWiseTeamRecord::where('matchId','=',$matchId)->where('playerData','like', '%' . $pid . '%')->get();
+                    $playerData = "";
                     foreach ($teamMembers as $teamMember) 
                     {
-                        $singleValue = MatchWiseTeamRecord::find($teamMember->id);
-    
-                        if($singleValue->matchRole == "Man Of Match")
+                        $decodedData = json_decode($teamMember->playerData);
+                        foreach($decodedData as $player)
                         {
-                            $singleValue->points = $singleValue->points * 3;
-                            $singleValue->save();
+                            if($player->pid == $pid)
+                            {
+                                if($player->matchRole == "Man Of Match")
+                                {
+                                    $player->points =  $player->points * 3;
+                                }
+                            }
                         }
-    
+                        $teamMember->playerData = json_encode($decodedData);
+                        $teamMember->save();
                     }
-    
+
+                    // ====================================================================================================== //
+
+                    $teamMembers = MatchWiseTeamRecord::where('matchId','=',$matchId)->where('playerData','like', '%' . $pid . '%')->get();
+                    $playerData = "";
+        
+                    foreach ($teamMembers as $teamMember) 
+                    {
+                        $decodedData = json_decode($teamMember->playerData);
+                        foreach($decodedData as $player)
+                        {
+                            if($player->pid == $pid)
+                            {
+                                if($player->matchRole == "Man Of Match")
+                                {
+                                    $player->points =  $player->points * 3;
+                                }
+
+                            }
+                        }
+                        $teamMember->playerData = json_encode($decodedData);
+                        $teamMember->save();
+                    }
+
                     //Update OWNER POINTS
                     $owners = TeamOwner::select('id')->get();
                     foreach ($owners as $owner) 
@@ -1052,19 +1117,16 @@ class AppCommand extends Model
                     }
                 }
                 
-                $teamMembers =  TeamMember::all();
-                foreach ($teamMembers as $member) {
-
-                    $member = MatchWiseTeamRecord::create([
-                                                                "matchId" => $matchesCron->id,
-                                                                "playerId" => $member->playerId,
-                                                                "ownerId" => $member->ownerId,
-                                                                "points" => $member->points,
-                                                                "matchRole" => $member->matchRole,
-                                                                "playerId" => $member->playerId,
-                                                                "pid" => $member->pid,
-                                                            ]);
-                }
+                $id           =  $request->id;
+                $teamMembers  =  TeamMember::find($id);
+                $playersData  =  $teamMembers->playerData;
+                $ownerId      =  $teamMembers->ownerId;
+                
+                $member = MatchWiseTeamRecord::create([
+                                    "matchId"    =>  $id,
+                                    "ownerId"    =>  $ownerId,
+                                    "playerData" =>  $playersData,
+                                ]);
 
             }
 

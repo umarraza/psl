@@ -193,6 +193,59 @@ class MatchController extends Controller
     }
 
 
+    public function allMatches(Request $request)
+    {
+        $user = JWTAuth::toUser($request->token);
+        $response = [
+                'data' => [
+                    'code'      => 400,
+                    'errors'     => '',
+                    'message'   => 'Invalid Token! User Not Found.',
+
+                ],
+                'status' => false
+            ];
+
+
+        if(!empty($user))
+        {
+    	
+            $response = [
+                'data' => [
+                    'code' => 400,
+                    'message' => 'Something went wrong. Please try again later!',
+                ],
+               'status' => false
+            ];
+            $rules = [
+                'seriesId'  =>  'required',
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+            if ($validator->fails()) {
+
+                $response['data']['message'] = 'Invalid input values.';
+                $response['data']['errors'] = $validator->messages();
+
+            }else{
+            
+                $matches = Match::where('seriesId', '=', $request->seriesId)->get();
+
+                if ($matches) {
+                    $response['data']['code']       = 200;
+                    $response['status']             = true;
+                    $response['data']['result']     = $matches;
+                    $response['data']['message']    = 'Request Successfull';
+                }else{
+                    $response['data']['code']       = 400;
+                    $response['status']             = false;
+                    $response['data']['message']    = 'Request Unsuccessfull';
+                }
+            }  
+        }
+        return $response;
+    }
+
     public function listMatches(Request $request)
     {
         $user = JWTAuth::toUser($request->token);
@@ -261,7 +314,7 @@ class MatchController extends Controller
         return $response;
     }
 
-    public function allTeams(Request $request)
+    public function listTeams(Request $request)
     {
         $user = JWTAuth::toUser($request->token);
         $response = [
@@ -306,6 +359,59 @@ class MatchController extends Controller
         return $response;
     }
 
+    public function allTeams(Request $request)
+    {
+        $user = JWTAuth::toUser($request->token);
+        $response = [
+                'data' => [
+                    'code'      => 400,
+                    'errors'     => '',
+                    'message'   => 'Invalid Token! User Not Found.',
+
+                ],
+                'status' => false
+            ];
+
+
+        if(!empty($user))
+        {
+    	
+            $response = [
+                'data' => [
+                    'code' => 400,
+                    'message' => 'Something went wrong. Please try again later!',
+                ],
+               'status' => false
+            ];
+            $rules = [
+                'seriesId'  =>  'required',
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+            if ($validator->fails()) {
+
+                $response['data']['message'] = 'Invalid input values.';
+                $response['data']['errors'] = $validator->messages();
+
+            }else{
+            
+                $teams = SeriesTeam::all();
+
+                if ($teams) {
+                    $response['data']['code']       = 200;
+                    $response['status']             = true;
+                    $response['data']['result']     = $teams;
+                    $response['data']['message']    = 'Request Successfull';
+                }else{
+                    $response['data']['code']       = 400;
+                    $response['status']             = false;
+                    $response['data']['message']    = 'Request Unsuccessfull';
+                }
+            }  
+        }
+        return $response;
+    }
+
 
     public function addTeam(Request $request)
     {
@@ -321,10 +427,12 @@ class MatchController extends Controller
         } else {
 
             $image = $request->file('image');
+            
+            $filename = time() . '.'. "jpg";
 
-            $filename = time() . '.'. $image->getClientOriginalExtension();
+            $image->storeAs('public', $filename);
 
-            $path =  \Storage::disk('public')->put('filename', $image);
+            // $path =  \Storage::putFile('public', $request->file('image'));
             
             $team = SeriesTeam::create([
                 
@@ -358,6 +466,16 @@ class MatchController extends Controller
                 return view('teams.viewTeams',compact('teams','id'));
             }
         }
+
+        // public function delete($id)
+        // {
+        //     $teamData = SeriesTeam::find($id);
+
+        //     $teamName =  $teamData->team;
+
+        //     $match = Match::
+
+        // }
 
 
 }

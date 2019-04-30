@@ -29,7 +29,7 @@ use App\Series;
     Route::get('/create-series', function () {
         return view('series.createSeries');
     });
-    Route::get('/show-rules', function () {
+    Route::get('/show-all-rules', function () {
         $rules = Rules::all();
         return view('rules', compact('rules'));
     });
@@ -57,10 +57,11 @@ use App\Series;
     Route::post('/update-series','Api\SeriesController@update');	
     Route::get('/delete-series/{id}','Api\SeriesController@delete');
     Route::get('/update-series-form/{id}','Api\SeriesController@series'); 	
+    Route::get('/activate-series/{id}','Api\SeriesController@activate'); 	
    
    
-   
-                 /* ====== Match Routes ====== */
+                    /* ====== Match Routes ====== */
+
     Route::post('/new-match','Api\SeriesMatchesController@create');				
     Route::get('/view-all-matches/{id}','Api\SeriesMatchesController@show');
     Route::get('/delete-match/{id}','Api\SeriesMatchesController@delete');				
@@ -79,12 +80,16 @@ use App\Series;
                 /* ====== Rules Routes ====== */
 
     Route::post('/update-rule/{id}','Api\RulesController@updateRule');	
+    Route::get('/show-rules','Api\RulesController@show');	
+
     Route::get('/update-rule-form/{id}','Api\RulesController@ruleData');	
 
                 /* ====== Teams Routes ====== */
 
     Route::post('/new-team','Api\MatchController@addTeam');                                          			
     Route::get('/view-teams/{id}','Api\MatchController@show');
+    Route::get('/delete-team/{id}','Api\MatchController@delete');
+
 
 
 

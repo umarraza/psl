@@ -19,15 +19,15 @@ class SeriesMatchesController extends Controller
     {
         $rules = [
 
-            'teamA'         =>   'required',
-            'teamB'         =>   'required',
-            'unique_id'     =>   'required',
-            'date'          =>   'required',
-            'dateTimeGMT'   =>   'required',
+            // 'teamA'         =>   'required',
+            // 'teamB'         =>   'required',
+            // 'unique_id'     =>   'required',
+            // 'date'          =>   'required',
+            // 'dateTimeGMT'   =>   'required',
             // 'type'          =>   'required',
             // 'squad'         =>   'required',
-            'matchStarted'  =>   'required',
-            'seriesId'      =>   'required',
+            // 'matchStarted'  =>   'required',
+            // 'seriesId'      =>   'required',    
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -35,6 +35,7 @@ class SeriesMatchesController extends Controller
             return redirect()->back()->withErrors($rules);
         }else{
 
+            // return $request;
         /* 
 
         Status = 1: Match with status 1 mean match is currently being playing between two countries i.e 
@@ -45,9 +46,7 @@ class SeriesMatchesController extends Controller
         update it to 0 pakistani team can play one match at a time.
         
         */  
-            // return $request->teamA;
-            // $team  = SeriesTeam::find(1);
-            // $request->teamA;
+
             $teamA = SeriesTeam::where("team", "=", $request->teamA)->first();
             $teamB = SeriesTeam::where("team", "=", $request->teamB)->first();
 
@@ -138,17 +137,26 @@ class SeriesMatchesController extends Controller
         $seriesId  =  $match->seriesId;
         
         if(!empty($match && $players && $seriesId)){
-           if( $players->each->delete()){
-                if($match->delete()){
-                    return redirect("view-all-matches/$seriesId");
-                }else{
-                    return "Match did not deleted!";
-                }
+
+            if($players->each->delete() && $match->delete())
+            {
+                return redirect("view-all-matches/$seriesId");
             }else{
-                return "Players did not deleted!";
+                return "Request Unsuccessfull";
             }
-        }else{
-            return "Request Unsuccessfull";
+
+
+        //    if( $players->each->delete()){
+        //         if($match->delete()){
+        //             return redirect("view-all-matches/$seriesId");
+        //         }else{
+        //             return "Match did not deleted!";
+        //         }
+        //     }else{
+        //         return "Players did not deleted!";
+        //     }
+        // }else{
+        //     return "Request Unsuccessfull";
         }
     }
 

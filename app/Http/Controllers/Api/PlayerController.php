@@ -169,7 +169,7 @@ class PlayerController extends Controller
                'status' => false
             ];
             $rules = [
-                'id'    => 'required',
+                'id'  => 'required',
                 'nameOfTeam'      => 'required',
             ];
 
@@ -177,7 +177,8 @@ class PlayerController extends Controller
             if ($validator->fails()) {
                 $response['data']['message'] = 'Invalid input values.';
                 $response['data']['errors'] = $validator->messages();
-            }else
+            }
+            else
             {
                 $player =  Player::where('id','=',$request->id)->first();
                 $player->nameOfTeam = $request->nameOfTeam;
@@ -297,8 +298,61 @@ class PlayerController extends Controller
         return $response;
     }
 
+    public function allPlayers(Request $request)
+    {
+        $user = JWTAuth::toUser($request->token);
+        $response = [
+                'data' => [
+                    'code'      => 400,
+                    'errors'     => '',
+                    'message'   => 'Invalid Token! User Not Found.',
 
-    public function listPlayers(Request $request)
+                ],
+                'status' => false
+            ];
+
+
+        if(!empty($user))
+        {
+    	
+            $response = [
+                'data' => [
+                    'code' => 400,
+                    'message' => 'Something went wrong. Please try again later!',
+                ],
+               'status' => false
+            ];
+            $rules = [
+                'seriesId'  =>  'required',
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+            if ($validator->fails()) {
+
+                $response['data']['message'] = 'Invalid input values.';
+                $response['data']['errors'] = $validator->messages();
+
+            }else{
+            
+                $players = Player::all();
+
+                if ($players) {
+                    $response['data']['code']       = 200;
+                    $response['status']             = true;
+                    $response['data']['result']     = $players;
+                    $response['data']['message']    = 'Request Successfull';
+                }else{
+                    $response['data']['code']       = 400;
+                    $response['status']             = false;
+                    $response['data']['message']    = 'Request Unsuccessfull';
+                }
+            }  
+        }
+        return $response;
+    }
+
+
+    public function listPlayers(Request $request)  // show all players of active series
     {
         $user = JWTAuth::toUser($request->token);
         $response = [

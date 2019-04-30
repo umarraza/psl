@@ -28,7 +28,6 @@ class Player extends Model
         'pid',
         'image',
         'nameOfTeam',
-        'matchId',
         'seriesId'
 
     ];
@@ -43,7 +42,6 @@ class Player extends Model
              'price'       => $this->price,
              'pid'         => $this->pid,
              'nameOfTeam'  => $this->nameOfTeam,
-             'matchId'     => $this->matchId,
              'seriesId'    => $this->seriesId,
              'image'       => "http://fantasycricleague.online/PSL/storage/app/public/".$this->image,
         ];

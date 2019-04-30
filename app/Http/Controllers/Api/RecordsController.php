@@ -24,6 +24,8 @@ use App\Models\MatchWiseTeamRecordTestVersion;
 use App\Models\Api\ApiAppCommand as AppCommand;
 use App\Models\Api\ApiPlayer as Player;
 use App\Models\Api\ApiMatch as Match;
+
+
 class RecordsController extends Controller
 {
     public function listTeamMembers(Request $request)
@@ -37,7 +39,7 @@ class RecordsController extends Controller
                 ],
                 'status' => false
             ];
-        if(!empty($user) && $user->isTeamOwner())
+        if(!empty($user)) //  && $user->isTeamOwner()
         {
         
             $response = [
@@ -48,42 +50,64 @@ class RecordsController extends Controller
                'status' => false
             ];
             $rules = [
-                'matchId'       => 'required',
+                'matchId'  =>  'required',
             ];
 
             $validator = Validator::make($request->all(), $rules);
             if ($validator->fails()) {
-                $response['data']['message'] = "Please select a match";//"'Invalid input values.';
+                $response['data']['message'] = "Please select a match";
                 $response['data']['errors'] = $validator->messages();
-            }else
+            }
+            else
             {
             
-            	$match = Match::find($request->matchId);
-            	if(!empty($match))
+                // $teamMembers   =   TeamMember::find(39);
+                // $ownerId       =   $teamMembers->ownerId;
+                // $data          =   $teamMembers->playerData;
+                // $playerData    =   json_decode($data);
+                $match = Match::find($request->matchId);
+                $ownerId = $request->ownerId;
+                if(!empty($match))
             	{
-            		if($match->type == "Twenty20,,")
+            		// if($match->type == "Twenty20,,")
             		{
-			            $teamMembers = MatchWiseTeamRecord::where('ownerId','=',$user->teamOwner->id)
-			            									->where('matchId','=',$request->matchId)->get();
-			            
-			            $resultArray = [];
-			            foreach ($teamMembers as $member) {
-			                $resultArray[] = $member->getArrayResponse();
-			            }
+			            $teamMembers = MatchWiseTeamRecord::where('ownerId','=',$ownerId)
+			            									->where('matchId','=',$request->matchId)->first();
+                    
+                        $playerData = json_decode($teamMembers->playerData);
+                        $playerArr = [];
+                        foreach($playerData as $data )
+                        {
+                            
+                            $player = Player::find($data->playerId);
+                            $playerArr[]  = [
 
-			            
+                                        "points"    => $data->points,
+                                        "matchRole" => $data->matchRole,
+                                        "player"    => $player->getArrayResponse(),
+                                        
+                            ];
+                        }
+                        $teamMembers['teamInfo'] = $playerArr;
+                        // $resultArray = [];
+			            // foreach ($teamMembers as $member) {
+			            //     $resultArray[] = $member->getArrayResponse();
+			            // }
+
 			            $response['data']['code']                   = 200;
 			            $response['status']                         = true;
-			            $response['data']['result']['teamData']     = $resultArray;
+                        $response['data']['result']['teamData']     = $teamMembers;
+                        // $response['data']['result']['playerData']   = $playerData;
+			            // $response['data']['result']['ownerId']      = $ownerId;
 			            $response['data']['result']['ownerData']    = $user->teamOwner->getArrayResponse();
 			            $response['data']['message']                = 'Request Successfull';
 			        }
-			        else
-			        {
-			        	$response['data']['code']                   = 405;
-			            $response['status']                         = true;
-			            $response['data']['message']                = 'Result is not available yet.';
-			        }
+			        // else
+			        // {
+			        // 	$response['data']['code']                   = 405;
+			        //     $response['status']                         = true;
+			        //     $response['data']['message']                = 'Result is not available yet.';
+			        // }
 		        }
 		        else
 		        {
@@ -133,14 +157,14 @@ class RecordsController extends Controller
                 foreach ($teamMembers as $member) {
 
                     $member = MatchWiseTeamRecord::create([
-                                                                "matchId" =>0,
-                                                                "playerId" => $member->playerId,
-                                                                "ownerId" => $member->ownerId,
-                                                                "points" => $member->points,
-                                                                "matchRole" => $member->matchRole,
-                                                                "playerId" => $member->playerId,
-                                                                "pid" => $member->pid,
-                                                            ]);
+                                            "matchId" =>0,
+                                            "playerId" => $member->playerId,
+                                            "ownerId" => $member->ownerId,
+                                            "points" => $member->points,
+                                            "matchRole" => $member->matchRole,
+                                            "playerId" => $member->playerId,
+                                            "pid" => $member->pid,
+                                        ]);
                 }
                                         $response['data']['code']                   = 200;
                         $response['status']                         = true;

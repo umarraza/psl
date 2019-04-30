@@ -3,17 +3,28 @@
 namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Validator;
+// use Validator;
 use App\SeriesMatches;
 use App\Series; 
 use App\Player; 
-use DB;
+// use DB;
+
+use App\Http\Requests;
+use App\Models\Roles;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+
+// ----- JWT ----- //
+use JWTAuthException;
+use JWTAuth;
 
 class SeriesController extends Controller
 {
 
     public function create(Request $request)  // Create New Series
     {
+    
         $rules = [
             'seriesName'  =>  'required|unique:cric-series',
             'status'      =>  'required',
@@ -75,6 +86,48 @@ class SeriesController extends Controller
         }
     }
 
+
+    public function allSeries(Request $request)
+    {
+        $user = JWTAuth::toUser($request->token);
+        $response = [
+                'data' => [
+                    'code'      => 400,
+                    'errors'     => '',
+                    'message'   => 'Invalid Token! User Not Found.',
+
+                ],
+                'status' => false
+            ];
+        if(!empty($user))
+        {
+    	
+            $response = [
+                'data' => [
+                    'code' => 400,
+                    'message' => 'Something went wrong. Please try again later!',
+                ],
+               'status' => false
+            ];
+            
+                $series = Series::all();
+
+
+                if ($series) {
+                    $response['data']['code']       = 200;
+                    $response['status']             = true;
+                    $response['data']['result']     = $series;
+                    $response['data']['message']    = 'Request Successfull';
+                }else{
+                    $response['data']['code']       = 400;
+                    $response['status']             = false;
+                    $response['data']['message']    = 'Request Unsuccessfull';
+                }
+                
+        }
+        
+        return $response;
+    }
 
     /* ============ Update Series ============ */
 
@@ -186,5 +239,24 @@ class SeriesController extends Controller
         }else{
             return "Series not deleted!";
         }
+    }
+
+    public function activate($id){
+
+        $series = Series::find($id);
+        
+        if ($series) {
+
+            $series->status = 'Active';
+
+            DB::table('cric-series')->where('cric-series.status', '=', 'Active')
+            ->update(['cric-series.status'=> 'Un-Active']);
+             
+            if ($series->save()){
+
+                return redirect('view-all-series');
+            }
+
+        }        
     }
 }

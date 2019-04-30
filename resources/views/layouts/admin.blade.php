@@ -108,8 +108,8 @@ desired effect
             <li><a href="{{ url('home') }}"><i class="fa fa-user"></i> <span>Home</span></a></li>                 
             <li><a href="{{ url('create-series') }}"><i class="fa fa-user"></i> <span>Create Series</span></a></li>                 
             <li><a href="{{ url('view-all-series') }}"><i class="fa fa-users"></i> <span>Show Series</span></a></li>
-             <li><a href="{{url('show-rules')}}"><i class="fa fa-money"></i> <span>Show Rules</span></a></li> 
-            <!-- <li><a href="{{url('show-products')}}"><i class="fa fa-product-hunt"></i> <span>Products</span></a></li> -->
+            <li><a href="{{url('show-all-rules')}}"><i class="fa fa-money"></i> <span>Show Rules</span></a></li> 
+            {{--  <li><a href="{{url('view-teams')}}"><i class="fa fa-product-hunt"></i> <span>Products</span></a></li>  --}}
              <!-- <li><a href="{{url('new-sales-form')}}"><i class="fa fa-male"></i> <span>Sale</span></a></li> -->
            <!--  <li><a href="{{url('new-purchase-form')}}"><i class="fa fa-male"></i> <span>Purchase</span></a></li>
             <li><a href="{{url('show-fixed-expenses')}}"><i class="fa fa-file"></i> <span>Fixed Expenses</span></a></li>

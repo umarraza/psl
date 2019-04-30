@@ -44,13 +44,41 @@ class MatchWiseTeamRecord extends Model
         return $this->hasOne(Player::class,'id','playerId');
     }
 
-    public function getArrayResponse() {
+    public function getArrayResponse2() {
         return [
              'id'        	=> $this->id,
              'player'     	=> $this->player->getArrayResponse(),
              'points'  		=> $this->points,
              'matchRole'    => $this->matchRole,
-             'pid'    => $this->pid,
+             'pid'          => $this->pid,
+        ];
+    }
+
+    public function getArrayResponse() {
+        
+        $playerData = json_decode($this->playerData);
+        $playerArr  = [];
+
+        foreach($playerData as $data )
+        {
+            $player = Player::find($data->playerId);
+
+            $playerArr[] = [
+
+                        "points"    => $data->points,
+                        "matchRole" => $data->matchRole,
+                        "pid"       => $data->pid,
+                        "player"    => $player->getArrayResponse(),
+                        
+            ];
+        }
+
+        
+        return [
+             'id'        	=> $this->id,
+             'ownerId'      => $this->ownerId,
+             'matchId'      => $this->matchId,
+             'player'     	=> $playerArr,
         ];
     }
 }

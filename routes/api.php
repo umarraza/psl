@@ -74,7 +74,7 @@ Route::group(['middleware' => 'jwt.auth'], function () {
 	// List Matches
 	Route::get('list-matches','Api\MatchController@listMatches');
 
-	Route::get('all-teams','Api\MatchController@allTeams');
+	Route::get('all-teams','Api\MatchController@listTeams');
 
 
 	//=========================== Team Owners =========================//
@@ -131,13 +131,11 @@ Route::group(['middleware' => 'jwt.auth'], function () {
     Route::post('delete-league','Api\LeagueController@deleteLeague');
     Route::get('top-ten-info','Api\TeamOwnerController@listTopTen');
     
-    
     // Get Match Wise Stats
     Route::post('match-wise-stats','Api\RecordsController@listTeamMembers');
     
     // Get Match Wise Stats
     Route::post('match-wise-stats-test','Api\RecordsController@updateRecords');
-    
     
     //=========================== Rules Routes =========================//
 
@@ -147,10 +145,13 @@ Route::group(['middleware' => 'jwt.auth'], function () {
     Route::post('update-rule','Api\RulesController@update');
     Route::post('delete-rule','Api\RulesController@delete');
 
+// ------------- Series Routes ---------------- //
 
-
-
-
+    Route::get('show-all-series','Api\SeriesController@allSeries');
+    Route::post('show-all-matches','Api\MatchController@allMatches');
+    Route::post('show-all-players','Api\PlayerController@allPlayers');
+    Route::post('show-all-teams','Api\MatchController@allTeams');
+    Route::post('/check','Api\TeamsController@check');
     
 });
 Route::get('abc-test','Api\StatsController@abcTest');
@@ -159,11 +160,14 @@ Route::get('localTestRoute',function()
 {
 
 	$response = [
-            'data' => [
+            
+        'data' => 
+            [
                 'code' => 400,
                 'message' => 'I Love You :*',
             ],
-           'status' => false
+
+            'status' => false
     ];
     return $response;
 });

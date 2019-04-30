@@ -19,32 +19,33 @@
                 {{ csrf_field() }}
                 <div class="box-body">
 
-                {{--  <div class="form-group">
+                <div class="form-group">
                     <label for="exampleFormControlSelect1">Team A:</label>
-                        <select class="form-control" id="exampleFormControlSelect1">
+                        <select class="form-control" id="exampleFormControlSelect1" name="teamA">
                         @foreach ($allTeams as $team)
-                            <option>{{$team->team}}</option>
+                            <option name="teamA">{{$team->team}}</option>
+                            {{--  <input type="hidden" class="form-control" id="type" id="id" name="id" value="{{ $team->id }}" placeholder="ODIs/T20/Test/Wolrd Cup">  --}}
                         @endforeach
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="exampleFormControlSelect1">Example select</label>
-                        <select class="form-control" id="exampleFormControlSelect1">
+                    <label for="exampleFormControlSelect1">Team B:</label>
+                        <select class="form-control" id="exampleFormControlSelect1" name="teamB">
                         @foreach ($allTeams as $team)
-                            <option>{{$team->team}}</option>
+                            <option name="TeamB">{{$team->team}}</option>
                         @endforeach
                     </select>
-                </div>  --}}
+                </div>
 
-                    <div class="form-group">
+                    {{--  <div class="form-group">
                         <label for="teamA">Team A:</label>
                         <input type="text" class="form-control" id="teamA" name="teamA" placeholder="Team A">
                     </div>
                     <div class="form-group">
                             <label for="teamB">Team B:</label>
                             <input type="text" class="form-control" id="teamA" name="teamB" placeholder="Team B">
-                    </div>
+                    </div>  --}}
                     <div class="form-group">
                         <label for="unique_id">Unique Id:</label>
                         <input type="text" class="form-control" id="unique_id" name="unique_id" placeholder="Unique Id">

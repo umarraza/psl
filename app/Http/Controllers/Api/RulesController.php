@@ -121,7 +121,7 @@ class RulesController extends Controller
                 ],
                 'status' => false
             ];
-        if ( !empty($user) && $user->isSuperAdmin() )
+        if ( !empty($user) )
         {
         
             $response = [
@@ -315,12 +315,16 @@ class RulesController extends Controller
     }
 
     public function updateRule(Request $request){
+
         $id = $request->id;
+        
         $rule = Rules::find($id);
+        
         $rule->points = $request->points; 
 
         if ($rule->save()) {
-            return redirect('/show-rules');
+            
+            return redirect('/show-all-rules');
         }
     }
 

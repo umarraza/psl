@@ -26,7 +26,6 @@ class PlayersController extends Controller
             'pid'          =>  'required|unique:players',
             // 'image'        =>  'required',
             'nameOfTeam'   =>  'required',
-            'matchId'      =>  'required',
             'seriesId'     =>  'required',
 
         ];
@@ -44,7 +43,6 @@ class PlayersController extends Controller
                     'pid'          =>  $request->pid,
                     // 'image'        =>  $request->image,
                     'nameOfTeam'   =>  $request->nameOfTeam,
-                    'matchId'      =>  $request->matchId,
                     'seriesId'     =>  $request->seriesId,
         ]);
 

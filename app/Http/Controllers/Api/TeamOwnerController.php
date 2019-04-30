@@ -22,6 +22,7 @@ use App\Models\Api\ApiTeamMember as TeamMember;
 use App\Models\Api\ApiAppCommand as AppCommand;
 use App\Models\Api\ApiPlayer as Player;
 use App\Models\Api\ApiMatchWiseTeamRecord as MatchWiseTeamRecord;
+
 class TeamOwnerController extends Controller
 {
     public function signUp(Request $request)
@@ -106,9 +107,6 @@ public function listTopTen(Request $request)
               'status' => false
            ];
            
-           
-            
-
            $teamOwners = TeamOwner::orderBy('total_points','desc')->limit(10)->get();
            
            $teamOwnersz = TeamOwner::orderBy('total_points','desc')->get();
@@ -324,18 +322,18 @@ public function listTopTen(Request $request)
                 ],
                 'status' => false
             ];
-        $appStopStatus = AppCommand::find(1);
-        if($appStopStatus->status==1)
-        {
-            $response = [
-                'data' => [
-                    'code' => 410,
-                    'message' => 'Sorry you can not update your players at this time.',
-                ],
-               'status' => false
-            ];
-            return $response;
-        }
+        // $appStopStatus = AppCommand::find(1);
+        // if($appStopStatus->status==1)
+        // {
+        //     $response = [
+        //         'data' => [
+        //             'code' => 410,
+        //             'message' => 'Sorry you can not update your players at this time.',
+        //         ],
+        //        'status' => false
+        //     ];
+        //     return $response;
+        // }
         if(!empty($user) )
         {
             $response = [
@@ -346,19 +344,20 @@ public function listTopTen(Request $request)
                'status' => false
             ];
             $rules = [
-                'teamData'          => ['required','json'],
-                'amountInAccount'   => ['required'],
-                'moves'             => ['required'],
+                'teamData'          =>  ['required','json'],
+                'amountInAccount'   =>  ['required'],
+                'moves'             =>  ['required'],
             ];
 
             $validator = Validator::make($request->all(), $rules);
             if ($validator->fails()) {
                 $response['data']['message'] = 'Invalid input values.';
                 $response['data']['errors'] = $validator->messages();
-            }else
+            }
+            else
             {
                 $rules = [
-                    '*.playerId'       => ['required','exists:players,id']
+                    '*.playerId' => ['required','exists:players,id']
                 ];
 
                 $validator = Validator::make(json_decode($request->teamData, true), $rules);
@@ -367,12 +366,12 @@ public function listTopTen(Request $request)
                     $response['data']['errors'] = $validator->messages();
                 }
             }
+
             if(empty($response['data']['errors']))
             {
                 $teamOwner = TeamOwner::where('id','=',$user->teamOwner->id)->first();
 
                 $myMoves = $teamOwner->moves-$request->moves; 
-                
                 {
                     $ownerId = $user->teamOwner->id;
                     $oldTeamMembers = TeamMember::where('ownerId','=',$ownerId)->delete();
@@ -380,24 +379,25 @@ public function listTopTen(Request $request)
                     $teamArr = [];
                     if(count($teamData)<12)
                     {
-                        foreach ($teamData as $value) 
+                        $points = 0;
+                        foreach($teamData as $value)
                         {
-                            $player = Player::find($value->playerId);
-                            $newTeam = TeamMember::create([
-                                    'playerId' => $value->playerId,
-                                    'pid'      => $player->pid,
-                                    'points'   => 0,
-                                    'matchRole'=> $value->matchRole,
-                                    'ownerId'  => $ownerId
-                            ]);
-                            $teamArr[] = $newTeam->getArrayResponse();
+                            $value->points = "0";
+                            $value->pid = "1";
                         }
-                        
-    
+                        $playerData = json_encode($teamData);
+
+                        $newTeam = TeamMember::create([
+                                'ownerId'     =>  $ownerId,
+                                'playerData'  =>  $playerData,
+                        ]);
+
+                        $teamArr[] = $newTeam->getArrayResponse();
+
                         $teamOwner->amountInAccount = $request->get('amountInAccount');
                         if($teamOwner->moves>0)
                         {
-                            if(($teamOwner->moves - $request->moves)<0 )
+                            if(($teamOwner->moves - $request->moves) <0 )
                             {
                                 $pointsToMinus = ($teamOwner->moves - $request->moves)*(-1);
                                 $teamOwner->total_points = $teamOwner->total_points - ($pointsToMinus*20); 
