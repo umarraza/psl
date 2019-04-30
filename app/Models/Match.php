@@ -24,6 +24,8 @@ class Match extends Model
         
         'teamA',
         'teamB',
+        'teamAId',
+        'teamBId',
         'unique_id',
         'date',
         'dateTimeGMT',

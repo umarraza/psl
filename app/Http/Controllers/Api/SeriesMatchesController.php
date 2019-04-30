@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\View;
 
 use DB;
 use Validator;
-use App\Models\Api\ApiMatch as SeriesMatches;
+use App\Models\Api\ApiMatch as Match;
 use App\Models\Api\ApiPlayer as Player;
 use App\Models\Api\ApiSeriesTeam as SeriesTeam;
 
@@ -50,10 +50,11 @@ class SeriesMatchesController extends Controller
             // $request->teamA;
             $teamA = SeriesTeam::where("team", "=", $request->teamA)->first();
             $teamB = SeriesTeam::where("team", "=", $request->teamB)->first();
+
             $teamAId = $teamA->id;
             $teamBId = $teamB->id;
 
-            $match = SeriesMatches::create([
+            $match = Match::create([
 
                 'teamA'         =>   $request->teamA,
                 'teamB'         =>   $request->teamB,
@@ -98,7 +99,7 @@ class SeriesMatchesController extends Controller
             return redirect()->back()->withErrors($rules);
         }else{
 
-                $match   =  SeriesMatches::find($request->id);
+                $match   =  Match::find($request->id);
 
                 $match->teamA          =  $request->teamA;
                 $match->teamB          =  $request->teamB;
@@ -121,7 +122,7 @@ class SeriesMatchesController extends Controller
     // Show all matches relevant to a particular series
     public function show($id)
     {   
-        $matches = SeriesMatches::where('seriesId', '=', $id)->get();
+        $matches = Match::where('seriesId', '=', $id)->get();
         if(!empty($matches)){
             return view('matches.viewMatches',compact('matches', 'id'));
         }else{
@@ -132,7 +133,7 @@ class SeriesMatchesController extends Controller
     // Delete match from a series
 
     public function delete($id){
-        $match     =  SeriesMatches::find($id);
+        $match     =  Match::find($id);
         $players   =  Player::where('matchId', '=', $id)->get();
         $seriesId  =  $match->seriesId;
         
@@ -153,7 +154,7 @@ class SeriesMatchesController extends Controller
 
     public function match($id)
     {
-        $match = SeriesMatches::find($id);
+        $match = Match::find($id);
 
         if ($match->status == 'Active') {
             $match->status = 1;
