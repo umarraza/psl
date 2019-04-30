@@ -63,7 +63,7 @@ class User extends Authenticatable
      * The dynamic attributes from mutators that should be returned with the user object.
      * @var array
      */
-    protected $appends = ['full_name'];
+    //protected $appends = ['full_name'];
 
     /**
      * @return mixed
@@ -146,38 +146,38 @@ class User extends Authenticatable
         ];
     }
 
-    public function getName(){
-        if($this->isServiceProvider() && !empty($this->ServiceProvider))
-            return $this->ServiceProvider->name;
-        elseif($this->isCustomer() && !empty($this->Customer))
-            return $this->Customer->firstName.' '.$this->Customer->lastName;
+    // public function getName(){
+    //     if($this->isServiceProvider() && !empty($this->ServiceProvider))
+    //         return $this->ServiceProvider->name;
+    //     elseif($this->isCustomer() && !empty($this->Customer))
+    //         return $this->Customer->firstName.' '.$this->Customer->lastName;
 
-        return '';
-    }
+    //     return '';
+    // }
 
-    public function getFullNameAttribute(){
-        if($this->isServiceProvider() && !empty($this->ServiceProvider))
-            return $this->ServiceProvider->name;
-        elseif($this->isCustomer() && !empty($this->Customer))
-            return $this->Customer->firstName.' '.$this->Customer->lastName;
-        return '';
-    }
+    // public function getFullNameAttribute(){
+    //     if($this->isServiceProvider() && !empty($this->ServiceProvider))
+    //         return $this->ServiceProvider->name;
+    //     elseif($this->isCustomer() && !empty($this->Customer))
+    //         return $this->Customer->firstName.' '.$this->Customer->lastName;
+    //     return '';
+    // }
 
-    public function getFirstName(){
-        if($this->isServiceProvider() && !empty($this->ServiceProvider))
-            return $this->ServiceProvider->name;
-        elseif($this->isCustomer() && !empty($this->Customer))
-            return $this->Customer->firstName;
-        return '';
-    }
+    // public function getFirstName(){
+    //     if($this->isServiceProvider() && !empty($this->ServiceProvider))
+    //         return $this->ServiceProvider->name;
+    //     elseif($this->isCustomer() && !empty($this->Customer))
+    //         return $this->Customer->firstName;
+    //     return '';
+    // }
 
-    public function getLastName(){
-        if($this->isServiceProvider() && !empty($this->ServiceProvider))
-            return $this->ServiceProvider->name;
-        elseif($this->isCustomer() && !empty($this->Customer))
-            return $this->Customer->lastName;
-        return '';
-    }
+    // public function getLastName(){
+    //     if($this->isServiceProvider() && !empty($this->ServiceProvider))
+    //         return $this->ServiceProvider->name;
+    //     elseif($this->isCustomer() && !empty($this->Customer))
+    //         return $this->Customer->lastName;
+    //     return '';
+    // }
     
     public function getDefaultImage(){
         $defaultImage = '';//'dumy.png';

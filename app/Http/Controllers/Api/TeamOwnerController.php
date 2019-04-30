@@ -369,6 +369,7 @@ public function listTopTen(Request $request)
 
             if(empty($response['data']['errors']))
             {
+                //return $request;
                 $teamOwner = TeamOwner::where('id','=',$user->teamOwner->id)->first();
 
                 $myMoves = $teamOwner->moves-$request->moves; 
@@ -427,9 +428,24 @@ public function listTopTen(Request $request)
                         // $team_owner = TeamOwner::where('id','=',$user->teamOwner->id)->update([
                         //         'amountInAccount'       => $request->get('amountInAccount'),
                         // ]);
+                        $resultArray = [];
+                        if(!empty($newTeam))
+                        {
+                            $playersData = json_decode($newTeam->playerData);
+                            foreach ($playersData as $data) 
+                            {
+                                $player = Player::find($data->playerId);
+                                $resultArray[] = [
+                                                    "matchRole" => $data->matchRole,
+                                                    "pid"       => $data->pid,
+                                                    "player" => $player->getArrayResponse(),
+                                                ];
+                            }
+                        }
+
                         $response['data']['code']       = 200;
                         $response['status']             = true;
-                        $response['data']['result']['team'] = $teamArr;
+                        $response['data']['result']['team'] = $resultArray;
                         $response['data']['result']['owner'] = $teamOwner;
                         $response['data']['message']    = 'Request Successfull';
                     }
@@ -525,15 +541,24 @@ public function listTopTen(Request $request)
                 ],
                'status' => false
             ];
+            $teamMembers = TeamMember::where('ownerId','=',$user->teamOwner->id)->first();
             
-
-            $teamMembers = TeamMember::where('ownerId','=',$user->teamOwner->id)->get();
             
             $resultArray = [];
-            foreach ($teamMembers as $member) {
-                $resultArray[] = $member->getArrayResponse();
-            }
 
+            if(!empty($teamMembers))
+            {
+                $playersData = json_decode($teamMembers->playerData);
+                foreach ($playersData as $data) 
+                {
+                    $player = Player::find($data->playerId);
+                    $resultArray[] = [
+                                        "matchRole" => $data->matchRole,
+                                        "pid"       => $data->pid,
+                                        "player" => $player->getArrayResponse(),
+                                    ];
+                }
+            }
             
             $response['data']['code']                   = 200;
             $response['status']                         = true;

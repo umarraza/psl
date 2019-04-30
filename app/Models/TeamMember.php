@@ -22,10 +22,11 @@ class TeamMember extends Model
      */
     protected $fillable = [
         'ownerId',
-        'playerId',
-        'points',
-        'matchRole',
-        'pid',
+        'playerData',
+        // 'playerId',
+        // 'points',
+        // 'matchRole',
+        // 'pid',
         // 'createdAt',
         // 'updatedAt'
     ];
@@ -43,13 +44,21 @@ class TeamMember extends Model
         return $this->hasOne(Player::class,'id','playerId');
     }
 
-    public function getArrayResponse() {
+    public function getArrayResponse2() {
         return [
              'id'        	=> $this->id,
              'player'     	=> $this->player->getArrayResponse(),
              'points'  		=> $this->points,
              'matchRole'    => $this->matchRole,
              'pid'    => $this->pid,
+        ];
+    }
+    public function getArrayResponse() {
+        return [
+             'id'        	=> $this->id,
+             'ownerId'        	=> $this->ownerId,
+             'playerData'     	=> $this->playerData,
+             
         ];
     }
 }
